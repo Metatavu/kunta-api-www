@@ -1,21 +1,22 @@
 (function() {
   'use strict';
-  
-  var express = require('express');
+
+  var config = require('./config.json');
   var path = require('path');
-  
+  var express = require('express');
+  var modules = require('./modules'); 
+ 
   var app = express();
   var http = require('http').Server(app);
-  
   app.set('view engine', 'pug');
-  app.set('views', path.join(__dirname, 'views'));
+  
+  var implementation = require(config.implementation)();
+  
+  app.set('views',implementation.views);
+  app.use(express.static(implementation.static));
   app.use(express.static(path.join(__dirname, 'public')));
+  implementation.routes(app, modules);
   
-  app.use('/css/bootstrap/', express.static(__dirname + '/node_modules/bootstrap/dist/css')); 
-  app.use('/scripts/bootstrap/', express.static(__dirname + '/node_modules/bootstrap/dist/js')); 
-  
-  require('./routes')(app);
- 
   http.listen(3000, function(){
     console.log('listening on *:3000');
   });
