@@ -1,0 +1,24 @@
+{
+  "name": "kunta-api-www",
+  "version": "0.0.2",
+  "description": "www visualization layer for kunta-api data",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:otavanopisto/kunta-api-www.git"
+  },
+  "author": "",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "express": "^4.14.0",
+    "pug": "^2.0.0-beta4"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "load-grunt-tasks": "^3.5.2"
+  }
+}
