@@ -10,15 +10,17 @@
   
   class KuntaApiModules {
     
-    constructor(api, organizationId) {
+    constructor(api, organizationId, basePath) {
       this.api = api;
       this.organizationId = organizationId;
+      this.basePath = basePath;
       this.events = EventsModule(this);
       this._promises = [];
     }
     
     addPromise (promise) {
       this._promises.push(promise);
+      return promise;
     }
     
     callback (then, error) {
@@ -29,6 +31,6 @@
     
   };
   
-  module.exports = new KuntaApiModules(kuntaApi, config.defaults.organizationId);
+  module.exports = new KuntaApiModules(kuntaApi, config.defaults.organizationId,  config.api.basePath);
   
 }).call(this);
