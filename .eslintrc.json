@@ -1,8 +1,11 @@
 {
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
   "rules": {},
   "env": {
     "node": true
   },
-  "esversion": 6,
   "extends": "eslint:recommended"
 }
+
