@@ -2,7 +2,7 @@
   'use strict';
   
   var config = require(__dirname + '/../config.json');
-  var kuntaApi = require(__dirname + '/../kunta-api')({
+  var kuntaApi = new require(__dirname + '/../kunta-api')({
     basePath: config.api.basePath
   });
   
