@@ -14,7 +14,7 @@
       this.api = api;
       this.organizationId = organizationId;
       this.basePath = basePath;
-      this.events = EventsModule(this);
+      this.events = new EventsModule(this);
       this._promises = [];
     }
     
@@ -31,6 +31,8 @@
     
   };
   
-  module.exports = new KuntaApiModules(kuntaApi, config.defaults.organizationId,  config.api.basePath);
+  module.exports = new KuntaApiModules(kuntaApi, 
+      config.defaults.organizationId, 
+      config.api.basePath);
   
 }).call(this);

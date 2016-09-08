@@ -18,7 +18,9 @@
           })
           .then(events => {
             var imagePromises = events.map(event => {
-              return this.eventsApi.listOrganizationEventImages(this.parent.organizationId, event.id);
+              return this.eventsApi.listOrganizationEventImages(
+                  this.parent.organizationId, 
+                  event.id);
             });
             
             Promise.all(imagePromises)
@@ -29,7 +31,9 @@
                   var organizationId = this.parent.organizationId;
                   var eventId = events[i].id;
                   var imageId = imageResponse[0].id;
-                  var imageSrc = imageResponse.length ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) : null;
+                  var imageSrc = imageResponse.length 
+                    ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) 
+                    : null;
                   events[i].imageSrc = imageSrc;
                 }
                 
@@ -51,6 +55,6 @@
   
   module.exports = function (kuntaApi) {
     return new EventsApi(kuntaApi);
-  }
+  };
   
 }).call(this);
