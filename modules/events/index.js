@@ -10,29 +10,30 @@
       this.eventsApi = new parent.api.EventsApi();
     }
     
-    latest(count) { 
+    latest(maxResults) { 
       this.parent.addPromise(new Promise((resolve, reject) => {
-        this.eventsApi.listOrganizationEvents(this.parent.organizationId)
+        this.eventsApi.listOrganizationEvents(this.parent.organizationId, {
+            endAfter: (new Date()).toISOString(),
+            maxResults: maxResults
+          })
           .then(events => {
-            var filteredEvents = events.slice(0, count);
-            
-            var imagePromises = filteredEvents.map(event => {
+            var imagePromises = events.map(event => {
               return this.eventsApi.listOrganizationEventImages(this.parent.organizationId, event.id);
             });
             
             Promise.all(imagePromises)
               .then(imageResponses => {
-                for (var i = 0, l = filteredEvents.length; i < l; i++) {
+                for (var i = 0, l = events.length; i < l; i++) {
                   var imageResponse = imageResponses[i];
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
-                  var eventId = filteredEvents[i].id;
+                  var eventId = events[i].id;
                   var imageId = imageResponse[0].id;
                   var imageSrc = imageResponse.length ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) : null;
-                  filteredEvents[i].imageSrc = imageSrc;
+                  events[i].imageSrc = imageSrc;
                 }
                 
-                resolve(filteredEvents);
+                resolve(events);
               })
               .catch(imagesErr => {
                 reject(imagesErr);
