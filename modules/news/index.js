@@ -4,40 +4,45 @@
   var util = require('util');
   var _ = require('lodash');
   
-  class EventsApi {
+  class NewsApi {
     
     constructor(parent) {
       this.parent = parent;
-      this.eventsApi = new parent.api.EventsApi();
+      this.newsApi = new parent.api.NewsApi();
     }
     
-    latest(maxResults) { 
+    latest(firstResult, maxResults) { 
       this.parent.addPromise(new Promise((resolve, reject) => {
-        this.eventsApi.listOrganizationEvents(this.parent.organizationId, {
-            endAfter: (new Date()).toISOString(),
+        this.newsApi.listOrganizationNews(this.parent.organizationId, {
+            firstResult: firstResult,
             maxResults: maxResults
           })
-          .then(events => {
-            var imagePromises = events.map(event => {
-              return this.eventsApi.listOrganizationEventImages(
+          .then(news => {
+            var imagePromises = news.map(newsArticle => {
+              return this.newsApi.listOrganizationNewsArticleImages(
                   this.parent.organizationId, 
-                  event.id);
+                  newsArticle.id);
             });
             
             Promise.all(imagePromises)
               .then(imageResponses => {
-                var result = _.clone(events);
+                var result = _.cloneDeep(news);
                 
                 for (var i = 0, l = result.length; i < l; i++) {
                   var imageResponse = imageResponses[i];
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
-                  var eventId = result[i].id;
-                  var imageId = imageResponse[0].id;
-                  var imageSrc = imageResponse.length 
-                    ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) 
-                    : null;
-                    result[i].imageSrc = imageSrc;
+                  var newsArticleId = result[i].id;
+                  var imageSrc = null;
+                  if (imageResponse.length) {
+                    imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data', 
+                        basePath, 
+                        organizationId, 
+                        newsArticleId, 
+                        imageResponse[0].id);
+                  } 
+                    
+                  result[i].imageSrc = imageSrc;
                 }
                 
                 resolve(result);
@@ -57,7 +62,7 @@
   }
   
   module.exports = function (kuntaApi) {
-    return new EventsApi(kuntaApi);
+    return new NewsApi(kuntaApi);
   };
   
 }).call(this);

@@ -14,7 +14,8 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "express": "^4.14.0",
-    "kunta-api-client": "0.0.3",
+    "kunta-api-client": "0.0.4",
+    "lodash": "^4.15.0",
     "pug": "^2.0.0-beta4"
   },
   "devDependencies": {
