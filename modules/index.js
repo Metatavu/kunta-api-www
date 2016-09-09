@@ -7,6 +7,7 @@
   });
   
   var EventsModule = require(__dirname + '/events');
+  var NewsModule = require(__dirname + '/news');
   
   class KuntaApiModules {
     
@@ -15,6 +16,7 @@
       this.organizationId = organizationId;
       this.basePath = basePath;
       this.events = new EventsModule(this);
+      this.news = new NewsModule(this);
       this._promises = [];
     }
     
