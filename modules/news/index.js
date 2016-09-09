@@ -33,10 +33,14 @@
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
                   var newsArticleId = result[i].id;
-                 
-                  var imageSrc = imageResponse.length 
-                    ? util.format('%s/organizations/%s/news/%s/images/%s/data', basePath, organizationId, newsArticleId, imageResponse[0].id) 
-                    : null;
+                  var imageSrc = null;
+                  if (imageResponse.length) {
+                    imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data', 
+                        basePath, 
+                        organizationId, 
+                        newsArticleId, 
+                        imageResponse[0].id);
+                  } 
                     
                   result[i].imageSrc = imageSrc;
                 }
