@@ -2,6 +2,7 @@
   'use strict';
   
   var util = require('util');
+  var _ = require('lodash');
   
   class EventsApi {
     
@@ -25,19 +26,21 @@
             
             Promise.all(imagePromises)
               .then(imageResponses => {
-                for (var i = 0, l = events.length; i < l; i++) {
+                var result = _.clone(events);
+                
+                for (var i = 0, l = result.length; i < l; i++) {
                   var imageResponse = imageResponses[i];
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
-                  var eventId = events[i].id;
+                  var eventId = result[i].id;
                   var imageId = imageResponse[0].id;
                   var imageSrc = imageResponse.length 
                     ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) 
                     : null;
-                  events[i].imageSrc = imageSrc;
+                    result[i].imageSrc = imageSrc;
                 }
                 
-                resolve(events);
+                resolve(result);
               })
               .catch(imagesErr => {
                 reject(imagesErr);
