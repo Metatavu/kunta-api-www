@@ -29,10 +29,9 @@
                   var imageResponse = imageResponses[i];
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
-                  var imageSrc = imageResponse.length 
-                    ? util.format('%s/organizations/%s/banners/%s/images/%s/data', basePath, organizationId, result[i].id, imageResponse[0].id) 
-                    : null;
-                    result[i].imageSrc = imageSrc;
+                  if (imageResponse.length) {
+                    result[i].imageSrc = util.format('%s/organizations/%s/banners/%s/images/%s/data', basePath, organizationId, result[i].id, imageResponse[0].id);
+                  }
                 }
                 
                 resolve(result);
