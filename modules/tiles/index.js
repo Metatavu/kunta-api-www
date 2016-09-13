@@ -30,7 +30,8 @@
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
                   if (imageResponse.length) {
-                    result[i].imageSrc = util.format('%s/organizations/%s/tiles/%s/images/%s/data', basePath, organizationId, result[i].id, imageResponse[0].id);
+                    result[i].imageSrc = util.format('%s/organizations/%s/tiles/%s/images/%s/data', 
+                        basePath, organizationId, result[i].id, imageResponse[0].id);
                   }
                 }
                 
