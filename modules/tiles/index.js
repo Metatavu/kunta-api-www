@@ -29,15 +29,9 @@
                 
                 for (var i = 0, l = result.length; i < l; i++) {
                   var imageResponse = imageResponses[i];
-                  var basePath = this.parent.basePath;
-                  var organizationId = this.parent.organizationId;
                   if (imageResponse.length) {
-                    var imageId = imageResponse[0].id;
-                    var tileId = result[i].id;
-                    
-                    result[i].imageSrc = 
-                        util.format('%s/organizations/%s/tiles/%s/images/%s/data', 
-                        basePath, organizationId, tileId, imageId);
+                    result[i].imageSrc = this.getImageUrl(result[i].id, 
+                        imageResponse[0].id);
                   }
                 }
                 
@@ -53,6 +47,14 @@
       }));
 
       return this.parent;
+    }
+    
+    getImageUrl(tileId, imageId) {
+      var basePath = this.parent.basePath;
+      var organizationId = this.parent.organizationId;
+      
+      return util.format('%s/organizations/%s/tiles/%s/images/%s/data', 
+          basePath, organizationId, tileId, imageId);
     }
     
   }
