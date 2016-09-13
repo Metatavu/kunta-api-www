@@ -1,3 +1,5 @@
+/*eslint-env es6*/
+
 (function() {
   'use strict';
   
@@ -30,8 +32,12 @@
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
                   if (imageResponse.length) {
-                    result[i].imageSrc = util.format('%s/organizations/%s/tiles/%s/images/%s/data', 
-                        basePath, organizationId, result[i].id, imageResponse[0].id);
+                    var imageId = imageResponse[0].id;
+                    var tileId = result[i].id;
+                    
+                    result[i].imageSrc = 
+                        util.format('%s/organizations/%s/tiles/%s/images/%s/data', 
+                        basePath, organizationId, tileId, imageId);
                   }
                 }
                 
