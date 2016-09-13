@@ -9,6 +9,7 @@
   var EventsModule = require(__dirname + '/events');
   var NewsModule = require(__dirname + '/news');
   var BannersModule = require(__dirname + '/banners');
+  var TileModule = require(__dirname + '/tiles');
   
   class KuntaApiModules {
     
@@ -19,6 +20,7 @@
       this.events = new EventsModule(this);
       this.news = new NewsModule(this);
       this.banners = new BannersModule(this);
+      this.tiles = new TileModule(this);
       this._promises = [];
     }
     
