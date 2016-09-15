@@ -1,4 +1,4 @@
-/* global Promise, __dirname:true */
+/* global Promise:true, __dirname:true, require:true */
 /* eslint-env es6 */
 
 (function() {
