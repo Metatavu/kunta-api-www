@@ -1,5 +1,5 @@
-/*global Promise __dirname:true*/
-/*eslint-env es6*/
+/* global Promise, __dirname:true */
+/* eslint-env es6 */
 
 (function() {
   'use strict';
