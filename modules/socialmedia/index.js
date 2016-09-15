@@ -1,3 +1,4 @@
+/*global Promise __dirname:true*/
 /*eslint-env es6*/
 
 (function() {
