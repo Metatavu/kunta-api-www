@@ -15,6 +15,7 @@
   "dependencies": {
     "express": "^4.14.0",
     "fb": "^1.1.1",
+    "instagram-api": "^1.0.2",
     "kunta-api-client": "0.0.6",
     "lodash": "^4.15.0",
     "pug": "^2.0.0-beta4",

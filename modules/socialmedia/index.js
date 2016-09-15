@@ -8,6 +8,7 @@
   var _ = require('lodash');
   var Twitter = require('twitter');
   var FB = require('fb');
+  var InstagramAPI = require('instagram-api');
   
   var config = require(__dirname + '/../../config.json');
   
@@ -27,10 +28,14 @@
       if (config.facebook) {
         FB.setAccessToken(util.format("%s|%s", config.facebook.appId, config.facebook.appSecret));
       }
+      
+      if (config.instagram) {
+        this.instagram = new InstagramAPI(config.instagram.accessToken);
+      }
     }
     
     latest(count) {
-      var sourceCount = (config.facebook ? 1 : 0) + (config.twitter ? 1 : 0); 
+      var sourceCount = (config.facebook ? 1 : 0) + (config.twitter ? 1 : 0) + (config.instagram ? 1 : 0); 
       if (sourceCount == 0) {
         this.parent.addPromise(new Promise((resolve, reject) => {
           resolve([]);
@@ -46,6 +51,10 @@
           
           if (config.twitter) {
             calls.push(this.twitterLatest(subcount));
+          }
+          
+          if (config.instagram) {
+            calls.push(this.instragramLatest(subcount));
           }
           
           Promise.all(calls)
@@ -116,11 +125,35 @@
       });
     }
     
+    instragramLatest (count) {
+      var parameters = {
+        count: count
+      };
+      
+      return new Promise((resolve, reject) => {
+        this.instagram.userMedia(config.instagram.userId, parameters)
+          .then(result => {
+            resolve(result.data.map((item) => {
+              return {
+                id: item.id,
+                created: new Date(parseInt(item['created_time'], 10) * 1000),
+                text: this._htmlifyLinks(item.caption.text),
+                source: 'instagram',
+                link: item.link,
+                image: item.images.low_resolution.url,
+                tags: item.tags
+              };
+            }));
+          })
+          .catch(reject);
+      });
+    }
+    
     _sortAndMerge(results) {
       var result = _.flatten(results);
       
       result.sort(function (item1, item2) {
-        return item1 > item2 ? -1 : item1 < item2 ? 1 : 0;
+        return item1.created > item2.created ? -1 : item1.created < item2.created ? 1 : 0;
       });
       
       return result;
