@@ -37,7 +37,7 @@
     latest(count) {
       var sourceCount = (config.facebook ? 1 : 0) + (config.twitter ? 1 : 0) + (config.instagram ? 1 : 0); 
       if (sourceCount == 0) {
-        this.parent.addPromise(new Promise((resolve, reject) => {
+        this.parent.addPromise(new Promise((resolve) => {
           resolve([]);
         }));
       } else {
@@ -77,7 +77,7 @@
       };
       
       return new Promise((resolve, reject) => {
-        this.twitter.get('statuses/user_timeline', options, (err, result, pallo) => {
+        this.twitter.get('statuses/user_timeline', options, (err, result) => {
           if (err) {
             reject(err);
           } else {
@@ -115,7 +115,7 @@
           if(!result || result.error) {
             reject(!result ? 'error occurred' : result.error);
           } else {
-            resolve((result.data || []).map(post => {
+            resolve((result.data||[]).map(post => {
               return {
                 id: post.id,
                 created: new Date(post.created_time),
