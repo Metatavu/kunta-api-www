@@ -1,0 +1,10 @@
+name: kunta-api-www
+version: "0.0.2"
+summary:  Kunta API WWW
+description: Kunta API Visualization layer 
+confinement: devmode
+parts:
+  kunta-api-www:
+    plugin: nodejs
+    node-packages:
+      - kunta-api-www
