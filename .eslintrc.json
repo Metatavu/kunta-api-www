@@ -10,9 +10,6 @@
     "es6": true,
     "amd": true
   },
-  "plugins": [
-    "promise"
-  ],
   "globals": {
     "__dirname": true
   },
