@@ -1,4 +1,4 @@
-/* global Promise:true, __dirname:true, require:true */
+/* global Promise, require, __dirname:true */
 /* eslint-env es6, amd */
 
 (function() {
@@ -82,12 +82,13 @@
             reject(err);
           } else {
             resolve(result.map(result => {
+              var idStr = result.id_str;
               return {
                 id: result.id,
-                created: new Date(result['created_at']),
+                created: new Date(result.created_at),
                 text: this._htmlifyLinks(result.text),
                 source: 'twitter',
-                link: 'https://twitter.com/statuses/' + result.id_str,
+                link: 'https://twitter.com/statuses/' + idStr,
                 image: result.entities.media ? result.entities.media[0].media_url_https : null,
                 tags: result.entities.hashtags.map(function (tag) { return tag.text; })
               };
@@ -98,10 +99,15 @@
     }
     
     facebookLatest (count) {
-      var fields = ['id', 'created_time', 'message', 'description', 'full_picture', 'message_tags' ] ;
       var options = {  
         limit: count, 
-        fields: fields 
+        fields: [
+          'id', 
+          'created_time', 
+          'message', 
+          'description', 
+          'full_picture', 
+          'message_tags'] 
       };
       
       return new Promise((resolve, reject) => {
@@ -112,12 +118,12 @@
             resolve((result.data || []).map(post => {
               return {
                 id: post.id,
-                created: new Date(post['created_time']),
+                created: new Date(post.created_time),
                 text: this._htmlifyLinks(post.message||post.description),
                 source: 'facebook',
                 link: 'http://facebook.com/' + post.id,
-                image: post['full_picture'],
-                tags: (post['message_tags']||[]).map(function (tag) { return tag.name; })
+                image: post.full_picture,
+                tags: (post.message_tags||[]).map(function (tag) { return tag.name; })
               };
             }));
           }
@@ -136,7 +142,7 @@
             resolve(result.data.map((item) => {
               return {
                 id: item.id,
-                created: new Date(parseInt(item['created_time'], 10) * 1000),
+                created: new Date(parseInt(item.created_time, 10) * 1000),
                 text: this._htmlifyLinks(item.caption.text),
                 source: 'instagram',
                 link: item.link,
@@ -164,7 +170,8 @@
         return null;
       }
       
-      return text.replace(/(https{0,1}:\/\/[a-zA-Z0-9.\/?&=_-]*)/g, '<a href="$1" target="_blank">\$1</a>');
+      return text.replace(/(https{0,1}:\/\/[a-zA-Z0-9.\/?&=_-]*)/g, 
+          '<a href="$1" target="_blank">\$1</a>');
     }
     
   }
