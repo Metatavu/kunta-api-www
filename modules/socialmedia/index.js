@@ -7,32 +7,33 @@
   var FB = require('fb');
   var InstagramAPI = require('instagram-api');
   
-  var config = require(__dirname + '/../../config.json');
-  
   class SocialMediaApi {
     
     constructor(parent) {
       this.parent = parent;
-      if (config.twitter) {
+      if (this.parent.config.get('twitter')) {
         this.twitter = new Twitter({
-          consumer_key: config.twitter.consumerKey,
-          consumer_secret: config.twitter.consumerSecret,
-          access_token_key: config.twitter.accessTokenKey,
-          access_token_secret: config.twitter.accessTokenSecret
+          consumer_key: this.parent.config.get('twitter:consumerKey'),
+          consumer_secret: this.parent.config.get('twitter:consumerSecret'),
+          access_token_key: this.parent.config.get('twitter:accessTokenKey'),
+          access_token_secret: this.parent.config.get('twitter:accessTokenSecret')
         });
       }
       
-      if (config.facebook) {
-        FB.setAccessToken(util.format("%s|%s", config.facebook.appId, config.facebook.appSecret));
+      if (this.parent.config.get('facebook')) {
+        FB.setAccessToken(util.format("%s|%s", this.parent.config.get('facebook:appId'), this.parent.config.get('facebook:appSecret')));
       }
       
-      if (config.instagram) {
-        this.instagram = new InstagramAPI(config.instagram.accessToken);
+      if (this.parent.config.get('instagram')) {
+        this.instagram = new InstagramAPI(this.parent.config.get('instagram:accessToken'));
       }
     }
     
     latest(count) {
-      var sourceCount = (config.facebook ? 1 : 0) + (config.twitter ? 1 : 0) + (config.instagram ? 1 : 0); 
+      var sourceCount = (this.parent.config.get('facebook') ? 1 : 0) + 
+          (this.parent.config.get('twitter') ? 1 : 0) + 
+          (this.parent.config.get('instagram') ? 1 : 0);
+      
       if (sourceCount == 0) {
         this.parent.addPromise(new Promise((resolve) => {
           resolve([]);
@@ -42,15 +43,15 @@
         
         this.parent.addPromise(new Promise((resolve, reject) => {
           var calls = [];
-          if (config.facebook) {
+          if (this.parent.config.get('facebook')) {
             calls.push(this.facebookLatest(subcount));
           }
           
-          if (config.twitter) {
+          if (this.parent.config.get('twitter')) {
             calls.push(this.twitterLatest(subcount));
           }
           
-          if (config.instagram) {
+          if (this.parent.config.get('instagram')) {
             calls.push(this.instragramLatest(subcount));
           }
           
@@ -67,7 +68,7 @@
     
     twitterLatest(count) {
       var options = {
-        "screen_name": config.twitter.screenName,
+        "screen_name": this.parent.config.get('twitter:screenName'),
         "count": count,
         "trim_user": true,
         "exclude_replies": true
@@ -108,7 +109,7 @@
       };
       
       return new Promise((resolve, reject) => {
-        FB.api(util.format('%s/posts', config.facebook.username), options, (result) => {
+        FB.api(util.format('%s/posts', this.parent.config.get('facebook:username')), options, (result) => {
           if(!result || result.error) {
             reject(!result ? 'error occurred' : result.error);
           } else {
@@ -134,7 +135,7 @@
       };
       
       return new Promise((resolve, reject) => {
-        this.instagram.userMedia(config.instagram.userId, parameters)
+        this.instagram.userMedia(this.parent.config.get('instagram:userId'), parameters)
           .then(result => {
             resolve(result.data.map((item) => {
               return {

@@ -1,11 +1,7 @@
 (function() {
   'use strict';
   
-  var config = require(__dirname + '/../config.json');
-  var kuntaApi = new require(__dirname + '/../kunta-api')({
-    basePath: config.api.basePath
-  });
-  
+  var KuntaApi = require(__dirname + '/../kunta-api.js');
   var EventsModule = require(__dirname + '/events');
   var NewsModule = require(__dirname + '/news');
   var BannersModule = require(__dirname + '/banners');
@@ -14,10 +10,11 @@
   
   class KuntaApiModules {
     
-    constructor(api, organizationId, basePath) {
-      this.api = api;
-      this.organizationId = organizationId;
-      this.basePath = basePath;
+    constructor(config) {
+      this.config = config;
+      this.organizationId = this.config.get('defaults:organizationId');
+      this.basePath = this.config.get('api:basePath');
+      this.api = new KuntaApi({ basePath: this.basePath });
       this.events = new EventsModule(this);
       this.news = new NewsModule(this);
       this.banners = new BannersModule(this);
@@ -40,8 +37,6 @@
     
   };
   
-  module.exports = new KuntaApiModules(kuntaApi, 
-      config.defaults.organizationId, 
-      config.api.basePath);
+  module.exports = KuntaApiModules;
   
 }).call(this);
