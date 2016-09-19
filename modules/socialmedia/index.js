@@ -156,7 +156,9 @@
       var result = _.flatten(results);
       
       result.sort(function (item1, item2) {
-        return item1.created > item2.created ? -1 : item1.created < item2.created ? 1 : 0;
+        var created1 = item1.created;
+        var created2 = item2.created;
+        return created1 > created2 ? -1 : created1 < created2 ? 1 : 0;
       });
       
       return result;
