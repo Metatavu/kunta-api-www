@@ -1,6 +1,3 @@
-/* global Promise, require, __dirname:true */
-/* eslint-env es6, amd */
-
 (function() {
   'use strict';
   
