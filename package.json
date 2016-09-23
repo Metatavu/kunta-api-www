@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
@@ -27,5 +27,8 @@
     "grunt": "^1.0.1",
     "grunt-contrib-sass": "^1.0.0",
     "load-grunt-tasks": "^3.5.2"
+  },
+  "scripts": {
+    "postinstall": "grunt sass"
   }
 }
