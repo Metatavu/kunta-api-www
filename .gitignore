@@ -5,3 +5,4 @@
 /.tern-project
 /.settings/
 /.externalToolBuilders/
+/npm-debug.log
