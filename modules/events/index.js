@@ -33,9 +33,8 @@
                   var basePath = this.parent.basePath;
                   var organizationId = this.parent.organizationId;
                   var eventId = result[i].id;
-                  var imageId = imageResponse[0].id;
                   var imageSrc = imageResponse.length 
-                    ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageId) 
+                    ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageResponse[0].id) 
                     : null;
                     result[i].imageSrc = imageSrc;
                 }
