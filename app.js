@@ -12,14 +12,13 @@
   var app = express();
   var http = require('http').Server(app);
   app.set('view engine', 'pug');
-  var modules = new Modules(config);
   
   var implementation = require(config.get('implementation'))();
   
   app.set('views',implementation.views);
   app.use(express.static(implementation.static));
   app.use(express.static(path.join(__dirname, 'public')));
-  implementation.routes(app, modules);
+  implementation.routes(app, config, Modules);
   
   http.listen(3000, function(){
     console.log('listening on *:3000');
