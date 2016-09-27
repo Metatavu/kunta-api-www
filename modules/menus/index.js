@@ -3,7 +3,6 @@
 (function() {
   'use strict';
 
-  var util = require('util');
   var _ = require('lodash');
 
   class MenusApi {
@@ -48,17 +47,25 @@
     }
     sortByParentId(items) {
       var sortedItems = _.sortBy(items, ['order']);
+      _.each(sortedItems, (item) => {
+        item.children = [];
+      });
+      
       var result = [];
-      var itemMap = _.mapKeys(sortedItems, function(item) {
+      var itemMap = _.mapKeys(sortedItems, (item) => {
         return item.id;
       });
+   
       for (var i = 0; i < sortedItems.length; i++) {
         var item = sortedItems[i];
-        if (item.parentId !== null) {
-          if (!_.isArray(itemMap[item.parentId].children)) {
-            itemMap[item.parentId].children = [];
+        if (item.parentItemId) {
+          var parentItem = itemMap[item.parentItemId];
+          
+          if (!parentItem.children) {
+            itemMap[item.parentItemId].children = [];
           }
-          itemMap[item.parentId].children.push(item);
+          
+          itemMap[item.parentItemId].children.push(item);
         } else {
           result.push(item);
         }
