@@ -130,17 +130,17 @@
     
     listMetaByParentId(parentId, preferLanguages) {
       var options = {
-        parentId: parentId ? parentId : "ROOT"
+        parentId: parentId ? parentId : 'ROOT'
       };
       
       this.parent.addPromise(new Promise((resolve, reject) => {
         this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
           .then(pages => {
             _.each(pages, page => {
-              page.title = this.selectBestLocale(page.titles, preferLanguages)
+              page.title = this.selectBestLocale(page.titles, preferLanguages);
             });
             
-            resolve(pages)
+            resolve(pages);
           })
           .catch(listErr => reject(listErr));
       }));
