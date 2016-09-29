@@ -128,6 +128,26 @@
       return this.parent;
     }
     
+    listMetaByParentId(parentId, preferLanguages) {
+      var options = {
+        parentId: parentId ? parentId : "ROOT"
+      };
+      
+      this.parent.addPromise(new Promise((resolve, reject) => {
+        this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
+          .then(pages => {
+            _.each(pages, page => {
+              page.title = this.selectBestLocale(page.titles, preferLanguages)
+            });
+            
+            resolve(pages)
+          })
+          .catch(listErr => reject(listErr));
+      }));
+
+      return this.parent;
+    }
+    
     selectBestLocale (localied, preferLanguages) {
       var localeContents = _.mapKeys(localied, (item) => {
         return item.language;
