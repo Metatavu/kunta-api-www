@@ -28,11 +28,14 @@
                   var menu = menus[i];
                   menu.items = this.sortByParentId(itemResponses[i]);
                 }
-                resolve(
-                  _.mapKeys(menus, function(menu) {
-                    return menu.slug;
+                
+                this.resolveAllItemPaths(menus)
+                  .then(() => {
+                    resolve(_.mapKeys(menus, function(menu) {
+                      return menu.slug;
+                    }));
                   })
-                );
+                  .catch(itemErr => reject(itemErr))
               })
               .catch(itemsErr => {
                 reject(itemsErr);
@@ -45,6 +48,41 @@
 
       return this.parent;
     }
+    
+    resolveAllItemPaths (menus) {
+      return Promise.all(menus.map(menu => {
+        return this.resolveItemPaths(menu);
+      }));
+    }
+    
+    resolveItemPaths (menu) {
+      return Promise.all(menu.items.map(item => {
+        return this.resolveUrl(item);
+      }));
+    }
+    
+    resolveUrl (item) {
+      return new Promise((resolve, reject) => {
+        if (item.externalUrl) {
+          resolve(_.assignIn(item, { 
+            url: item.externalUrl 
+          }));
+        } else if (item.pageId) {
+          this.parent.pages.resolvePageTree(item.pageId)
+            .then(tree => {
+              var url = '/' + _.map(tree, function (item) {
+                return item.slug;
+              }).join('/');
+          
+              resolve(_.assignIn(item, { 
+                url: url
+              }));
+            })
+            .catch(err => reject(err));
+        }
+      });
+    }
+    
     sortByParentId(items) {
       var sortedItems = _.sortBy(items, ['order']);
       _.each(sortedItems, (item) => {

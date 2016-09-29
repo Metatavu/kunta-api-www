@@ -31,7 +31,7 @@
       return this.parent;
     }
 
-    resolveBreadcrumb(pageId) {
+    resolvePageTree(pageId) {
       return new Promise((resolve, reject) => {
         this.pagesApi.findOrganizationPage(this.parent.organizationId, pageId)
           .then(page => {
@@ -39,7 +39,7 @@
               reject(util.format("Could not find page with id %s", pageId));
             } else {
               if (page.parentId) {
-                this.resolveBreadcrumb(page.parentId)
+                this.resolvePageTree(page.parentId)
                   .then(ancestors => {
                     resolve(ancestors.concat(page));
                   })
@@ -64,7 +64,7 @@
           return;
         }
         
-        this.resolveBreadcrumb(page.parentId)
+        this.resolvePageTree(page.parentId)
           .then(pages => {
             var result = [];
             var path = [];
