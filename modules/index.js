@@ -8,6 +8,7 @@
   var TileModule = require(__dirname + '/tiles');
   var MenusModule = require(__dirname + '/menus');
   var SocialMediaModule = require(__dirname + '/socialmedia');
+  var PagesModule = require(__dirname + '/pages');
   
   class KuntaApiModules {
     
@@ -22,6 +23,7 @@
       this.tiles = new TileModule(this);
       this.menus = new MenusModule(this);
       this.socialMedia = new SocialMediaModule(this);
+      this.pages = new PagesModule(this);
       
       this._promises = [];
     }
