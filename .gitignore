@@ -1,0 +1,8 @@
+/node_modules/
+/.project
+/config.json
+/.sass-cache/
+/.tern-project
+/.settings/
+/.externalToolBuilders/
+/npm-debug.log

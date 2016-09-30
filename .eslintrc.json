@@ -1,0 +1,18 @@
+{
+  "esversion": 6,
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "esversion": 6
+  },
+  "rules": {},
+  "env": {
+    "node": true,
+    "es6": true,
+    "amd": true
+  },
+  "globals": {
+    "__dirname": true
+  },
+  "extends": "eslint:recommended"
+}
+
