@@ -3,6 +3,7 @@
 (function() {
   'use strict';
 
+  var util = require('util');
   var _ = require('lodash');
 
   class MenusApi {
@@ -98,12 +99,15 @@
         var item = sortedItems[i];
         if (item.parentItemId) {
           var parentItem = itemMap[item.parentItemId];
+          if (parentItem) {
+            if (!parentItem.children) {
+              itemMap[item.parentItemId].children = [];
+            }
           
-          if (!parentItem.children) {
-            itemMap[item.parentItemId].children = [];
+            itemMap[item.parentItemId].children.push(item);
+          } else {
+            console.error(util.format("Could not find parentItem with id %s", item.parentItemId));
           }
-          
-          itemMap[item.parentItemId].children.push(item);
         } else {
           result.push(item);
         }
