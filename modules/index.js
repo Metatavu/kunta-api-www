@@ -9,6 +9,7 @@
   var MenusModule = require(__dirname + '/menus');
   var SocialMediaModule = require(__dirname + '/socialmedia');
   var PagesModule = require(__dirname + '/pages');
+  var JobsModule = require(__dirname + '/jobs');
   
   class KuntaApiModules {
     
@@ -24,6 +25,7 @@
       this.menus = new MenusModule(this);
       this.socialMedia = new SocialMediaModule(this);
       this.pages = new PagesModule(this);
+      this.jobs = new JobsModule(this);
       
       this._promises = [];
     }
