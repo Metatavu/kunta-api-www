@@ -148,12 +148,19 @@
       return this.parent;
     }
     
-    selectBestLocale (localied, preferLanguages) {
-      var localeContents = _.mapKeys(localied, (item) => {
+    selectBestLocale (localized, preferLanguages) {
+      var localeContents = _.mapKeys(localized, (item) => {
         return item.language;
       });
+      
       var contentLocales = _.keys(localeContents);
-      var bestLocale = (new locale.Locales(preferLanguages, 'fi')).best(new locale.Locales(contentLocales));
+      var prefered = _.isArray(preferLanguages) ? preferLanguages : [preferLanguages];
+      if (_.indexOf(prefered, 'fi')) {
+         prefered.push('fi');
+      }
+
+      var bestLocale = (new locale.Locales(prefered)).best(new locale.Locales(contentLocales));
+     
       return localeContents[bestLocale] ? localeContents[bestLocale].value : null;
     }
     
