@@ -57,7 +57,7 @@
       });
     }
     
-    resolveBreadcrumbs(page, preferLanguages) {
+    resolveBreadcrumbs(basePath, page, preferLanguages) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         if (!page.parentId) {
           resolve([]);
@@ -72,7 +72,7 @@
             for (var i = 0, l = pages.length; i < l; i++) {
               path.push(pages[i].slug);   
               result.push({
-                path: '/' + path.join('/'),
+                path: basePath + path.join('/'),
                 title: this.selectBestLocale(pages[i].titles, preferLanguages)
               });
             }
