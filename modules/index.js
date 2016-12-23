@@ -1,6 +1,12 @@
 (function() {
   'use strict';
   
+  var Promise = require('bluebird');
+
+  process.on('unhandledRejection', function(error, promise) {
+    console.error("UNHANDLED REJECTION", error.stack);
+  });  
+
   var KuntaApi = require(__dirname + '/../kunta-api.js');
   var EventsModule = require(__dirname + '/events');
   var NewsModule = require(__dirname + '/news');
@@ -10,6 +16,7 @@
   var SocialMediaModule = require(__dirname + '/socialmedia');
   var PagesModule = require(__dirname + '/pages');
   var JobsModule = require(__dirname + '/jobs');
+  var AnnouncementsModule = require(__dirname + '/announcements');
   
   class KuntaApiModules {
     
@@ -26,7 +33,8 @@
       this.socialMedia = new SocialMediaModule(this);
       this.pages = new PagesModule(this);
       this.jobs = new JobsModule(this);
-      
+      this.announcements = new AnnouncementsModule(this);
+
       this._promises = [];
     }
     
