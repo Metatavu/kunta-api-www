@@ -1,6 +1,12 @@
 (function() {
   'use strict';
   
+  var Promise = require('bluebird');
+
+  process.on('unhandledRejection', function(error, promise) {
+    console.error("UNHANDLED REJECTION", error.stack);
+  });  
+
   var KuntaApi = require(__dirname + '/../kunta-api.js');
   var EventsModule = require(__dirname + '/events');
   var NewsModule = require(__dirname + '/news');
