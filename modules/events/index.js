@@ -33,9 +33,7 @@
                 var basePath = this.parent.basePath;
                 var organizationId = this.parent.organizationId;
                 var eventId = result.id;
-                var imageSrc = imageResponse.length
-                  ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageResponse[0].id)
-                  : null;
+                var imageSrc = imageResponse.length ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageResponse[0].id) : null;
                 result.imageSrc = imageSrc;
                 callback();
               }).catch((imageError) => {
