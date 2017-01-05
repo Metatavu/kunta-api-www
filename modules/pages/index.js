@@ -179,7 +179,8 @@
             resolve(page);
           })
           .catch(imagesErr => {
-            reject(imagesErr);
+            console.error('Error loading page image', imagesErr);
+            resolve(page);
           });  
       });
     }

@@ -42,7 +42,8 @@
               });
           })
           .catch(listErr => {
-            reject(listErr);
+            console.error('Error listing menus', listErr);
+            resolve([]);
           });
       }));
 

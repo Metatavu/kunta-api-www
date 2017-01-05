@@ -1,8 +1,9 @@
-(function() {
+(function () {
   'use strict';
 
   var util = require('util');
   var _ = require('lodash');
+  var async = require('async');
 
   class NewsApi {
 
@@ -33,13 +34,14 @@
             newsArticle.imageSrc = imageSrc;
             resolve(newsArticle);
           }).catch(imagesErr => {
-            reject(imagesErr);
+            console.error('Error loading news image', imagesErr);
+            resolve(newsArticle);
           });
         }).catch(listErr => {
           reject(listErr);
         });
       }));
-      
+
       return this.parent;
     }
 
@@ -55,36 +57,37 @@
               newsArticle.id);
           });
 
-          Promise.all(imagePromises)
-            .then(imageResponses => {
-              var result = _.cloneDeep(news);
+          var results = _.cloneDeep(news);
 
-              for (var i = 0, l = result.length; i < l; i++) {
-                var imageResponse = imageResponses[i];
-                var basePath = this.parent.basePath;
-                var organizationId = this.parent.organizationId;
-                var newsArticleId = result[i].id;
-                var imageSrc = null;
-                if (imageResponse.length) {
-                  imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data',
-                    basePath,
-                    organizationId,
-                    newsArticleId,
-                    imageResponse[0].id);
-                }
-
-                result[i].imageSrc = imageSrc;
+          async.eachOf(results, (result, index, callback) => {
+            var imagePromise = imagePromises[index];
+            imagePromise.then((imageResponse) => {
+              var basePath = this.parent.basePath;
+              var organizationId = this.parent.organizationId;
+              var newsArticleId = result.id;
+              var imageSrc = null;
+              if (imageResponse.length) {
+                imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data',
+                  basePath,
+                  organizationId,
+                  newsArticleId,
+                  imageResponse[0].id);
               }
 
-              resolve(result);
-            })
-            .catch(imagesErr => {
-              reject(imagesErr);
+              result.imageSrc = imageSrc;
+              callback();
+            }).catch((imageError) => {
+              console.error('Error loading news image', imageError);
+              callback();
             });
-        })
-          .catch(listErr => {
-            reject(listErr);
+
+          }, () => {
+            resolve(results);
           });
+        }).catch(listErr => {
+          console.error('Error listing news', listErr);
+          resolve([]);
+        });
       }));
 
       return this.parent;
@@ -92,7 +95,7 @@
 
   }
 
-  module.exports = function(kuntaApi) {
+  module.exports = function (kuntaApi) {
     return new NewsApi(kuntaApi);
   };
 
