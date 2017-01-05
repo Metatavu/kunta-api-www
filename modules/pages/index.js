@@ -57,7 +57,7 @@
       });
     }
     
-    resolveBreadcrumbs(page, preferLanguages) {
+    resolveBreadcrumbs(basePath, page, preferLanguages) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         if (!page.parentId) {
           resolve([]);
@@ -72,7 +72,7 @@
             for (var i = 0, l = pages.length; i < l; i++) {
               path.push(pages[i].slug);   
               result.push({
-                path: '/' + path.join('/'),
+                path: basePath + path.join('/'),
                 title: this.selectBestLocale(pages[i].titles, preferLanguages)
               });
             }
@@ -148,12 +148,19 @@
       return this.parent;
     }
     
-    selectBestLocale (localied, preferLanguages) {
-      var localeContents = _.mapKeys(localied, (item) => {
+    selectBestLocale (localized, preferLanguages) {
+      var localeContents = _.mapKeys(localized, (item) => {
         return item.language;
       });
+      
       var contentLocales = _.keys(localeContents);
-      var bestLocale = (new locale.Locales(preferLanguages, 'fi')).best(new locale.Locales(contentLocales));
+      var prefered = _.isArray(preferLanguages) ? preferLanguages : [preferLanguages];
+      if (_.indexOf(prefered, 'fi')) {
+         prefered.push('fi');
+      }
+
+      var bestLocale = (new locale.Locales(prefered)).best(new locale.Locales(contentLocales));
+     
       return localeContents[bestLocale] ? localeContents[bestLocale].value : null;
     }
     
@@ -172,7 +179,8 @@
             resolve(page);
           })
           .catch(imagesErr => {
-            reject(imagesErr);
+            console.error('Error loading page image', imagesErr);
+            resolve(page);
           });  
       });
     }

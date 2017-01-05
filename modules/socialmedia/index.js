@@ -58,8 +58,10 @@
           Promise.all(calls)
             .then((results) => {
               resolve(this._sortAndMerge(results));
-            })
-            .catch(reject);
+            }).catch((socialMediaError) => {
+              console.error('Error social media items', socialMediaError);
+              resolve([]);
+            });
         }));
       }
       
