@@ -44,7 +44,8 @@
             });
 
           }).catch(listErr => {
-            reject(listErr);
+            console.error('Error listing tiles', listErr);
+            resolve([]);
           });
       }));
 

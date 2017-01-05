@@ -85,7 +85,8 @@
             resolve(results);
           });
         }).catch(listErr => {
-          reject(listErr);
+          console.error('Error listing news', listErr);
+          resolve([]);
         });
       }));
 

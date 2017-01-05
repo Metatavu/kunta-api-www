@@ -43,7 +43,8 @@
             });
 
           }).catch(listErr => {
-            reject(listErr);
+            console.error('Error listing banners', listErr);
+            resolve([]);
           });
       }));
 

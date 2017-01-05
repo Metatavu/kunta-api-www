@@ -49,7 +49,8 @@
 
           })
           .catch(listErr => {
-            reject(listErr);
+            console.error('Error listing events', listErr);
+            resolve([]);
           });
       }));
 
