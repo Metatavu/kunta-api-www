@@ -39,7 +39,7 @@
                 callback();
               });
 
-            }, (err) => {
+            }, () => {
               resolve(results);
             });
 

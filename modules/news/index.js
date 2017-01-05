@@ -81,7 +81,7 @@
               callback();
             });
 
-          }, (err) => {
+          }, () => {
             resolve(results);
           });
         }).catch(listErr => {

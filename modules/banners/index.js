@@ -38,7 +38,7 @@
                 callback();
               });
 
-            }, (err) => {
+            }, () => {
               resolve(results);
             });
 
