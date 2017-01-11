@@ -1,5 +1,7 @@
 (function () {
   'use strict';
+  
+  const util = require('util');
 
   class AnnouncementsApi {
 
@@ -15,7 +17,7 @@
         }).then(announcements => {
           resolve(announcements.length > 0 ? announcements[0] : null);
         }).catch(listErr => {
-          console.error(listErr);
+          console.error(util.format('Failed to find announcement by slug %s', slug), listErr);
           resolve(null);
         });
       }));
