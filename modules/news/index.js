@@ -1,3 +1,4 @@
+/*jshint esversion: 6 */
 (function () {
   'use strict';
 
@@ -13,7 +14,7 @@
     }
 
     findBySlug(slug) {
-      this.parent.addPromise(new Promise((resolve, reject) => {
+      this.parent.addPromise(new Promise((resolve) => {
         this.newsApi.listOrganizationNews(this.parent.organizationId, {
           slug: slug
         }).then(news => {
@@ -38,7 +39,8 @@
             resolve(newsArticle);
           });
         }).catch(listErr => {
-          reject(listErr);
+          console.error(util.format('Failed to find news article by slug %s', slug), listErr);
+          resolve(null);
         });
       }));
 
