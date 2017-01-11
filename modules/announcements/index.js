@@ -8,6 +8,21 @@
       this.announcementsApi = new parent.api.AnnouncementsApi();
     }
 
+    findBySlug(slug) {
+      this.parent.addPromise(new Promise((resolve) => {
+        this.announcementsApi.listOrganizationAnnouncements(this.parent.organizationId, {
+          slug: slug
+        }).then(announcements => {
+          resolve(announcements.length > 0 ? announcements[0] : null);
+        }).catch(listErr => {
+          console.error(listErr);
+          resolve(null);
+        });
+      }));
+
+      return this.parent;
+    }
+
     list(maxResults, sortBy, sortDir) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         this.announcementsApi.listOrganizationAnnouncements(this.parent.organizationId, {
