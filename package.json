@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.0.19",
+  "version": "0.0.20-alpha-2",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "express": "^4.14.0",
     "fb": "^1.1.1",
     "instagram-api": "^1.0.2",
-    "kunta-api-client": "0.0.37",
+    "kunta-api-client": "0.0.39",
     "locale": "^0.1.0",
     "lodash": "^4.15.0",
     "minimist": "^1.2.0",
