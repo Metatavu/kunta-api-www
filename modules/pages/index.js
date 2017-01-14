@@ -31,7 +31,7 @@
       return this.parent;
     }
     
-    readTreeMetasWithChildren(rootId, leafId, preferLanguages) {
+    readMenuTree(rootId, leafId, preferLanguages) {
       var opts = function (parentId) {
         return {
           parentId: parentId ? parentId : 'ROOT'
@@ -51,7 +51,13 @@
                 this.pagesApi.listOrganizationPages(this.parent.organizationId, opts(treeNode.id))
                   .then(pages => {
                     var childPromises = _.map(pages, (page) => {
-                      return this.pagesApi.listOrganizationPages(this.parent.organizationId, opts(page.id));
+                      if (page.meta && page.meta.hideMenuChildren) {
+                        return new Promise((resolve) => {
+                          resolve([]);
+                        });
+                      } else {
+                        return this.pagesApi.listOrganizationPages(this.parent.organizationId, opts(page.id));
+                      }
                     });
                     
                     _.each(pages, page => {
