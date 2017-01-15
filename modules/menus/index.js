@@ -69,7 +69,7 @@
             url: item.externalUrl
           }));
         } else if (item.pageId) {
-          this.parent.pages.resolvePageTree(item.pageId)
+          this.parent.pages.resolvePageTree(null, item.pageId)
             .then(tree => {
               var url = '/' + _.map(tree, function (item) {
                 return item.slug;
