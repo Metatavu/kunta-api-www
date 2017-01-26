@@ -240,6 +240,25 @@
       });
     }
     
+    resolvePath (pageId) {
+      this.parent.addPromise(new Promise((resolve) => {
+        this.resolvePageTree(null, pageId)
+        .then(pages => {
+          var path = pages.map((page) => {
+            return page.slug;
+          });
+          
+          resolve(path.join('/'));
+        })
+        .catch(err => {
+          console.error(util.format('failed to resolve path for page %s', pageId), err);
+          resolve(null);
+        });
+      }));
+      
+      return this.parent;
+    }
+    
     search(search, preferLanguages) {
       var options = {
         search: search
