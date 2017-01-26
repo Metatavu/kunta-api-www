@@ -24,6 +24,7 @@
     "minimist": "^1.2.0",
     "nconf": "^0.8.4",
     "pug": "^2.0.0-beta9",
+    "request": "^2.79.0",
     "twitter": "^1.7.0"
   },
   "devDependencies": {

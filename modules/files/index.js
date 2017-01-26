@@ -2,6 +2,7 @@
 (function() {
   'use strict';
   
+  const util = require('util');
   const _ = require('lodash');
   
   class FilesModule {
@@ -9,6 +10,18 @@
     constructor(parent) {
       this.parent = parent;
       this.filesApi = new parent.api.FilesApi();
+    }
+    
+    streamData(id) {
+      var url = util.format('%s/organizations/%s/files/%s/data', this.parent.basePath, this.parent.organizationId, id);
+      this.parent.addPromise(this.parent.promiseStream(url));
+      return this.parent;
+    }
+    
+    findById(fileId) { 
+      this.parent.addPromise(this.filesApi.findOrganizationFile(this.parent.organizationId, fileId));
+
+      return this.parent;
     }
     
     search(search) {

@@ -5,6 +5,7 @@
   const Promise = require('bluebird');
   const _ = require('lodash');
   const locale = require('locale');
+  const request = require('request');
   
   process.on('unhandledRejection', function(error, promise) {
     console.error("UNHANDLED REJECTION", error.stack);
@@ -52,6 +53,13 @@
       Promise.all(this._promises)
         .then(then)
         .catch(error);
+    }
+    
+    promiseStream (url) {
+      return new Promise((resolve) => {
+        var stream = request(url);
+        resolve(stream);
+      });
     }
 
     selectBestLocale (localized, preferLanguages) {
