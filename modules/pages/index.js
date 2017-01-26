@@ -2,9 +2,8 @@
 (function() {
   'use strict';
   
-  var util = require('util');
-  var _ = require('lodash');
-  var locale = require('locale');
+  const util = require('util');
+  const _ = require('lodash');
   
   class PagesModule {
     
@@ -18,7 +17,7 @@
         this.pagesApi.findOrganizationPageContent(this.parent.organizationId, pageId)
           .then(pageContent => {
             if (pageContent) {
-              resolve(this.selectBestLocale(pageContent, preferLanguages));
+              resolve(this.parent.selectBestLocale(pageContent, preferLanguages));
             } else {
               resolve(null);
             }
@@ -61,7 +60,7 @@
                     });
                     
                     _.each(pages, page => {
-                      page.title = this.selectBestLocale(page.titles, preferLanguages);
+                      page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
                     });
                     
                     Promise.all(childPromises)
@@ -139,7 +138,7 @@
               result.push({
                 id: pages[i].id,
                 path: basePath + '/' + path.join('/'),
-                title: this.selectBestLocale(pages[i].titles, preferLanguages)
+                title: this.parent.selectBestLocale(pages[i].titles, preferLanguages)
               });
             }
             
@@ -209,7 +208,7 @@
         this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
           .then(pages => {
             _.each(pages, page => {
-              page.title = this.selectBestLocale(page.titles, preferLanguages);
+              page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
             });
             
             resolve(pages);
@@ -220,25 +219,9 @@
       return this.parent;
     }
     
-    selectBestLocale (localized, preferLanguages) {
-      var localeContents = _.mapKeys(localized, (item) => {
-        return item.language;
-      });
-      
-      var contentLocales = _.keys(localeContents);
-      var prefered = _.isArray(preferLanguages) ? preferLanguages : [preferLanguages];
-      if (_.indexOf(prefered, 'fi')) {
-         prefered.push('fi');
-      }
-
-      var bestLocale = (new locale.Locales(prefered)).best(new locale.Locales(contentLocales));
-     
-      return localeContents[bestLocale] ? localeContents[bestLocale].value : null;
-    }
-    
     processPage (page, preferLanguages) {
       return new Promise((resolve, reject) => {
-        page.title = this.selectBestLocale(page.titles, preferLanguages);
+        page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
      
         this.pagesApi.listOrganizationPageImages(this.parent.organizationId, page.id)
           .then(imageResponse => {
@@ -266,7 +249,7 @@
         this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
           .then(pages => {
             _.each(pages, page => {
-              page.title = this.selectBestLocale(page.titles, preferLanguages);
+              page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
             });
             
             resolve(pages);
