@@ -257,6 +257,29 @@
       });
     }
     
+    search(search, preferLanguages) {
+      var options = {
+        search: search
+      };
+      
+      this.parent.addPromise(new Promise((resolve) => {
+        this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
+          .then(pages => {
+            _.each(pages, page => {
+              page.title = this.selectBestLocale(page.titles, preferLanguages);
+            });
+            
+            resolve(pages);
+          })
+          .catch(listErr => {
+            console.error(listErr);
+            resolve([]);
+          });
+      }));
+
+      return this.parent;
+    }
+    
   }
   
   module.exports = function (kuntaApi) {
