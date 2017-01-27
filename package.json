@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
