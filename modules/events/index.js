@@ -1,9 +1,10 @@
+/*jshint esversion: 6 */
 (function () {
   'use strict';
 
-  var util = require('util');
-  var _ = require('lodash');
-  var async = require('async');
+  const util = require('util');
+  const _ = require('lodash');
+  const async = require('async');
 
   class EventsApi {
 
@@ -12,10 +13,12 @@
       this.eventsApi = new parent.api.EventsApi();
     }
 
-    latest(maxResults) {
+    latest(maxResults, orderBy, orderDir) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         this.eventsApi.listOrganizationEvents(this.parent.organizationId, {
-          endAfter: (new Date()).toISOString(),
+          startAfter: (new Date()).toISOString(),
+          orderBy: orderBy ? orderBy : 'START_DATE',
+          orderDir: orderDir ? orderDir : 'ASCENDING',
           maxResults: maxResults
         })
           .then(events => {
