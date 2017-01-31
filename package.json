@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.0.19",
+  "version": "0.0.23",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
@@ -14,17 +14,18 @@
   "license": "AGPL-3.0",
   "dependencies": {
     "async": "^2.1.4",
-    "bluebird": "^3.4.6",
+    "bluebird": "^3.4.7",
     "express": "^4.14.0",
     "fb": "^1.1.1",
-    "instagram-api": "^1.0.2",
-    "kunta-api-client": "0.0.33",
+    "instagram-api": "^1.0.3",
+    "kunta-api-client": "0.0.40",
     "locale": "^0.1.0",
-    "lodash": "^4.15.0",
+    "lodash": "^4.17.4",
     "minimist": "^1.2.0",
     "nconf": "^0.8.4",
-    "pug": "^2.0.0-beta4",
-    "twitter": "^1.4.0"
+    "pug": "^2.0.0-beta9",
+    "request": "^2.79.0",
+    "twitter": "^1.7.0"
   },
   "devDependencies": {
     "grunt": "^1.0.1",

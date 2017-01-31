@@ -1,22 +1,27 @@
+/*jshint esversion: 6 */
 (function() {
   'use strict';
   
-  var Promise = require('bluebird');
-
+  const Promise = require('bluebird');
+  const _ = require('lodash');
+  const locale = require('locale');
+  const request = require('request');
+  
   process.on('unhandledRejection', function(error, promise) {
     console.error("UNHANDLED REJECTION", error.stack);
   });  
 
-  var KuntaApi = require(__dirname + '/../kunta-api.js');
-  var EventsModule = require(__dirname + '/events');
-  var NewsModule = require(__dirname + '/news');
-  var BannersModule = require(__dirname + '/banners');
-  var TileModule = require(__dirname + '/tiles');
-  var MenusModule = require(__dirname + '/menus');
-  var SocialMediaModule = require(__dirname + '/socialmedia');
-  var PagesModule = require(__dirname + '/pages');
-  var JobsModule = require(__dirname + '/jobs');
-  var AnnouncementsModule = require(__dirname + '/announcements');
+  const KuntaApi = require(__dirname + '/../kunta-api.js');
+  const EventsModule = require(__dirname + '/events');
+  const NewsModule = require(__dirname + '/news');
+  const BannersModule = require(__dirname + '/banners');
+  const TileModule = require(__dirname + '/tiles');
+  const MenusModule = require(__dirname + '/menus');
+  const SocialMediaModule = require(__dirname + '/socialmedia');
+  const PagesModule = require(__dirname + '/pages');
+  const FilesModule = require(__dirname + '/files');
+  const JobsModule = require(__dirname + '/jobs');
+  const AnnouncementsModule = require(__dirname + '/announcements');
   
   class KuntaApiModules {
     
@@ -32,6 +37,7 @@
       this.menus = new MenusModule(this);
       this.socialMedia = new SocialMediaModule(this);
       this.pages = new PagesModule(this);
+      this.files = new FilesModule(this);
       this.jobs = new JobsModule(this);
       this.announcements = new AnnouncementsModule(this);
 
@@ -47,6 +53,29 @@
       Promise.all(this._promises)
         .then(then)
         .catch(error);
+    }
+    
+    promiseStream (url) {
+      return new Promise((resolve) => {
+        var stream = request(url);
+        resolve(stream);
+      });
+    }
+
+    selectBestLocale (localized, preferLanguages) {
+      var localeContents = _.mapKeys(localized, (item) => {
+        return item.language;
+      });
+      
+      var contentLocales = _.keys(localeContents);
+      var prefered = _.isArray(preferLanguages) ? preferLanguages : [preferLanguages];
+      if (_.indexOf(prefered, 'fi')) {
+         prefered.push('fi');
+      }
+
+      var bestLocale = (new locale.Locales(prefered)).best(new locale.Locales(contentLocales));
+     
+      return localeContents[bestLocale] ? localeContents[bestLocale].value : null;
     }
     
   };

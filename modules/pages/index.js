@@ -1,10 +1,9 @@
-/*eslint-env es6*/
+/*jshint esversion: 6 */
 (function() {
   'use strict';
   
-  var util = require('util');
-  var _ = require('lodash');
-  var locale = require('locale');
+  const util = require('util');
+  const _ = require('lodash');
   
   class PagesModule {
     
@@ -18,7 +17,7 @@
         this.pagesApi.findOrganizationPageContent(this.parent.organizationId, pageId)
           .then(pageContent => {
             if (pageContent) {
-              resolve(this.selectBestLocale(pageContent, preferLanguages));
+              resolve(this.parent.selectBestLocale(pageContent, preferLanguages));
             } else {
               resolve(null);
             }
@@ -30,16 +29,76 @@
 
       return this.parent;
     }
+    
+    readMenuTree(rootId, leafId, preferLanguages) {
+      var opts = function (parentId) {
+        return {
+          parentId: parentId ? parentId : 'ROOT'
+        };
+      };
+      
+      this.parent.addPromise(new Promise((resolve, reject) => {
+        if (rootId == leafId) {
+          resolve([]);
+          return;
+        } 
+        
+        this.resolvePageTree(rootId, leafId)
+          .then(treeNodes => {
+            var promises = _.map(treeNodes, (treeNode) => {
+              return new Promise((metaResolve, metaReject) => {
+                this.pagesApi.listOrganizationPages(this.parent.organizationId, opts(treeNode.id))
+                  .then(pages => {
+                    var childPromises = _.map(pages, (page) => {
+                      if (page.meta && page.meta.hideMenuChildren) {
+                        return new Promise((resolve) => {
+                          resolve([]);
+                        });
+                      } else {
+                        return this.pagesApi.listOrganizationPages(this.parent.organizationId, opts(page.id));
+                      }
+                    });
+                    
+                    _.each(pages, page => {
+                      page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
+                    });
+                    
+                    Promise.all(childPromises)
+                      .then((children) => {
+                        for (var i = 0; i < children.length; i++) {
+                          pages[i].hasChildren = children[i].length > 0;
+                        }
+                        
+                        metaResolve(pages);
+                      })
+                      .catch(childErr => metaReject(childErr));
+                  })
+                  .catch(listErr => metaReject(listErr));  
+              });
+            });
+            
+            Promise.all(promises)
+              .then(resolve)
+              .catch(reject);
+          })
+          .catch(err => {
+            console.error(util.format("Failed to resolvePageTree %s", err));
+            resolve([]);
+          });
+      }));
+      
+      return this.parent;
+    }
 
-    resolvePageTree(pageId) {
+    resolvePageTree(rootId, leafId) {
       return new Promise((resolve, reject) => {
-        this.pagesApi.findOrganizationPage(this.parent.organizationId, pageId)
+        this.pagesApi.findOrganizationPage(this.parent.organizationId, leafId)
           .then(page => {
             if (!page) {
-              reject(util.format("Could not find page with id %s", pageId));
+              reject(util.format("Could not find page with id %s", leafId));
             } else {
-              if (page.parentId) {
-                this.resolvePageTree(page.parentId)
+              if (page.parentId && page.parentId != rootId) {
+                this.resolvePageTree(rootId, page.parentId)
                   .then(ancestors => {
                     resolve(ancestors.concat(page));
                   })
@@ -60,11 +119,16 @@
     resolveBreadcrumbs(basePath, page, preferLanguages) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         if (!page.parentId) {
-          resolve([]);
+          console.error(util.format("Could not resolve breadcrumbs because page %s parent is null", page.id));
+          resolve([{
+            id: page.id,
+            path: basePath + '/' + page.slug,
+            title: page.title
+          }]);
           return;
         }
         
-        this.resolvePageTree(page.parentId)
+        this.resolvePageTree(null, page.parentId)
           .then(pages => {
             var result = [];
             var path = [];
@@ -72,10 +136,17 @@
             for (var i = 0, l = pages.length; i < l; i++) {
               path.push(pages[i].slug);   
               result.push({
-                path: basePath + path.join('/'),
-                title: this.selectBestLocale(pages[i].titles, preferLanguages)
+                id: pages[i].id,
+                path: basePath + '/' + path.join('/'),
+                title: this.parent.selectBestLocale(pages[i].titles, preferLanguages)
               });
             }
+            
+            result.push({
+              id: page.id,
+              path: path.join('/') + '/' + page.slug,
+              title: page.title
+            });
             
             resolve(result);
           })
@@ -137,7 +208,7 @@
         this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
           .then(pages => {
             _.each(pages, page => {
-              page.title = this.selectBestLocale(page.titles, preferLanguages);
+              page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
             });
             
             resolve(pages);
@@ -148,25 +219,9 @@
       return this.parent;
     }
     
-    selectBestLocale (localized, preferLanguages) {
-      var localeContents = _.mapKeys(localized, (item) => {
-        return item.language;
-      });
-      
-      var contentLocales = _.keys(localeContents);
-      var prefered = _.isArray(preferLanguages) ? preferLanguages : [preferLanguages];
-      if (_.indexOf(prefered, 'fi')) {
-         prefered.push('fi');
-      }
-
-      var bestLocale = (new locale.Locales(prefered)).best(new locale.Locales(contentLocales));
-     
-      return localeContents[bestLocale] ? localeContents[bestLocale].value : null;
-    }
-    
     processPage (page, preferLanguages) {
       return new Promise((resolve, reject) => {
-        page.title = this.selectBestLocale(page.titles, preferLanguages);
+        page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
      
         this.pagesApi.listOrganizationPageImages(this.parent.organizationId, page.id)
           .then(imageResponse => {
@@ -183,6 +238,48 @@
             resolve(page);
           });  
       });
+    }
+    
+    resolvePath (pageId) {
+      this.parent.addPromise(new Promise((resolve) => {
+        this.resolvePageTree(null, pageId)
+        .then(pages => {
+          var path = pages.map((page) => {
+            return page.slug;
+          });
+          
+          resolve(path.join('/'));
+        })
+        .catch(err => {
+          console.error(util.format('failed to resolve path for page %s', pageId), err);
+          resolve(null);
+        });
+      }));
+      
+      return this.parent;
+    }
+    
+    search(search, preferLanguages) {
+      var options = {
+        search: search
+      };
+      
+      this.parent.addPromise(new Promise((resolve) => {
+        this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
+          .then(pages => {
+            _.each(pages, page => {
+              page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
+            });
+            
+            resolve(pages);
+          })
+          .catch(listErr => {
+            console.error(listErr);
+            resolve([]);
+          });
+      }));
+
+      return this.parent;
     }
     
   }
