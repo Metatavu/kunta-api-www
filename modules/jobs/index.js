@@ -7,6 +7,12 @@
       this.parent = parent;
       this.jobsApi = new parent.api.JobsApi();
     }
+    
+    findById(jobId) { 
+      this.parent.addPromise(this.jobsApi.findOrganizationJob(this.parent.organizationId, jobId));
+
+      return this.parent;
+    }
 
     list(maxResults, sortBy, sortDir) {
       this.parent.addPromise(new Promise((resolve, reject) => {
