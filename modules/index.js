@@ -22,6 +22,7 @@
   const FilesModule = require(__dirname + '/files');
   const JobsModule = require(__dirname + '/jobs');
   const AnnouncementsModule = require(__dirname + '/announcements');
+  const FragmentsModule = require(__dirname + '/fragments');
   
   class KuntaApiModules {
     
@@ -40,6 +41,7 @@
       this.files = new FilesModule(this);
       this.jobs = new JobsModule(this);
       this.announcements = new AnnouncementsModule(this);
+      this.fragments = new FragmentsModule(this);
 
       this._promises = [];
     }
