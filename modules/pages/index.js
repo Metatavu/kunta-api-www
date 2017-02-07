@@ -258,21 +258,6 @@
       return new Promise((resolve) => {
         page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
         resolve(page);
-     /**
-        this.pagesApi.listOrganizationPageImages(this.parent.organizationId, page.id)
-          .then(imageResponse => {
-            var basePath = this.parent.basePath;
-            var organizationId = this.parent.organizationId;
-            if (imageResponse.length) {
-              page.featuredImageSrc = util.format('%s/organizations/%s/pages/%s/images/%s/data', basePath, organizationId, page.id, imageResponse[0].id);
-            }
-          
-            resolve(page);
-          })
-          .catch(imagesErr => {
-            console.error('Error loading page image', imagesErr);
-            resolve(page);
-          });  **/
       });
     }
     
