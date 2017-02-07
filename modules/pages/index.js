@@ -4,12 +4,47 @@
   
   const util = require('util');
   const _ = require('lodash');
+  const request = require('request');
+  const fs = require('fs');
   
   class PagesModule {
     
     constructor(parent) {
       this.parent = parent;
       this.pagesApi = new parent.api.PagesApi();
+    }
+    
+    streamPageImageByType(pageId, type, defaultImage) {
+      this.parent.addPromise(new Promise((resolve) => {
+        var options = {
+          type: type 
+        };
+        
+        this.pagesApi.listOrganizationPageImages(this.parent.organizationId, pageId, options)
+          .then(imageResponse => {
+            var basePath = this.parent.basePath;
+            var organizationId = this.parent.organizationId;
+            if (imageResponse.length) {
+              var url = util.format('%s/organizations/%s/pages/%s/images/%s/data', basePath, organizationId, pageId, imageResponse[0].id);
+              resolve({
+                attachment: imageResponse[0], 
+                stream: request(url)
+              });
+            } else {
+              resolve({
+                stream: fs.createReadStream(defaultImage)
+              });
+            }
+          })
+          .catch(imagesErr => {
+            console.error(imagesErr);
+            resolve({
+              stream: fs.createReadStream(defaultImage)
+            });
+          });
+      }));
+      
+      return this.parent;
     }
     
     getContent(pageId, preferLanguages) {
@@ -220,9 +255,10 @@
     }
     
     processPage (page, preferLanguages) {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
-     
+        resolve(page);
+     /**
         this.pagesApi.listOrganizationPageImages(this.parent.organizationId, page.id)
           .then(imageResponse => {
             var basePath = this.parent.basePath;
@@ -236,7 +272,7 @@
           .catch(imagesErr => {
             console.error('Error loading page image', imagesErr);
             resolve(page);
-          });  
+          });  **/
       });
     }
     
