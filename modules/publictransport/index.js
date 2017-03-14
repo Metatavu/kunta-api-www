@@ -17,7 +17,7 @@
     findAgencyById(id) {
       this.parent.addPromise(new Promise((resolve) => {
         this.publicTransportApi.findOrganizationPublicTransportAgency(this.parent.organizationId, id).then(agency => {
-          resolve(agency.length > 0 ? agency[0] : null);
+          resolve(agency);
         }).catch(findErr => {
           console.error(util.format('Failed to find agency by id %s', id), findErr);
           resolve(null);
@@ -45,7 +45,7 @@
     findTripById(id) {
       this.parent.addPromise(new Promise((resolve) => {
         this.publicTransportApi.findOrganizationPublicTransportTrip(this.parent.organizationId, id).then(trip => {
-          resolve(trip.length > 0 ? trip[0] : null);
+          resolve(trip);
         }).catch(findErr => {
           console.error(util.format('Failed to find trip by id %s', id), findErr);
           resolve(null);
@@ -74,7 +74,7 @@
     findRouteById(id) {
       this.parent.addPromise(new Promise((resolve) => {
         this.publicTransportApi.findOrganizationPublicTransportRoute(this.parent.organizationId, id).then(route => {
-          resolve(route.length > 0 ? route[0] : null);
+          resolve(route);
         }).catch(findErr => {
           console.error(util.format('Failed to find route by id %s', id), findErr);
           resolve(null);
@@ -102,7 +102,7 @@
     findScheduleById(id) {
       this.parent.addPromise(new Promise((resolve) => {
         this.publicTransportApi.findOrganizationPublicTransportSchedule(this.parent.organizationId, id).then(schedule => {
-          resolve(schedule.length > 0 ? schedule[0] : null);
+          resolve(schedule);
         }).catch(findErr => {
           console.error(util.format('Failed to find schedule by id %s', id), findErr);
           resolve(null);
@@ -126,7 +126,6 @@
 
       return this.parent;
     }
-    
     
     findStopsByIds(ids) {
       this.parent.addPromise(new Promise((resolve) => {
@@ -160,11 +159,10 @@
       return this.parent;
     }
     
-    
     findStopTimeById(id) {
       this.parent.addPromise(new Promise((resolve) => {
         this.publicTransportApi.findOrganizationPublicTransportStopTime(this.parent.organizationId, id).then(stopTime => {
-          resolve(stopTime.length > 0 ? stopTime[0] : null);
+          resolve(stopTime);
         }).catch(findErr => {
           console.error(util.format('Failed to find stopTime by id %s', id), findErr);
           resolve(null);
