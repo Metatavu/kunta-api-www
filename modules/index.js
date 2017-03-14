@@ -1,4 +1,6 @@
 /*jshint esversion: 6 */
+/* global __dirname */
+
 (function() {
   'use strict';
   
@@ -23,6 +25,7 @@
   const JobsModule = require(__dirname + '/jobs');
   const AnnouncementsModule = require(__dirname + '/announcements');
   const FragmentsModule = require(__dirname + '/fragments');
+  const PublicTransportModule = require(__dirname + '/publictransport');
   
   class KuntaApiModules {
     
@@ -42,6 +45,7 @@
       this.jobs = new JobsModule(this);
       this.announcements = new AnnouncementsModule(this);
       this.fragments = new FragmentsModule(this);
+      this.publicTransport = new PublicTransportModule(this);
 
       this._promises = [];
     }
