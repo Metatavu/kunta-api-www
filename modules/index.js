@@ -26,6 +26,7 @@
   const AnnouncementsModule = require(__dirname + '/announcements');
   const FragmentsModule = require(__dirname + '/fragments');
   const PublicTransportModule = require(__dirname + '/publictransport');
+  const ShortlinksModule = require(__dirname + '/shortlinks');
   
   class KuntaApiModules {
     
@@ -46,6 +47,7 @@
       this.announcements = new AnnouncementsModule(this);
       this.fragments = new FragmentsModule(this);
       this.publicTransport = new PublicTransportModule(this);
+      this.shortlinks = new ShortlinksModule(this);
 
       this._promises = [];
     }
