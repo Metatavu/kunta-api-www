@@ -1,9 +1,11 @@
+/*jshint esversion: 6 */
 (function () {
   'use strict';
 
-  var util = require('util');
-  var _ = require('lodash');
-  var async = require('async');
+  const util = require('util');
+  const _ = require('lodash');
+  const async = require('async');
+  const request = require('request');
 
   class BannersApi {
 
@@ -11,9 +13,15 @@
       this.parent = parent;
       this.bannersApi = new parent.api.BannersApi();
     }
+    
+    streamImageData(bannerId, imageId, query, headers) {
+      var url = util.format('%s/organizations/%s/banners/%s/images/%s/data', this.parent.basePath, this.parent.organizationId, bannerId, imageId);
+      this.parent.addPromise(this.parent.promiseStream(url, query, headers));
+      return this.parent;
+    }
 
     list() {
-      this.parent.addPromise(new Promise((resolve, reject) => {
+      this.parent.addPromise(new Promise((resolve) => {
         this.bannersApi.listOrganizationBanners(this.parent.organizationId)
           .then(banners => {
             var imagePromises = banners.map(banner => {
@@ -27,10 +35,8 @@
             async.eachOf(results, (result, index, callback) => {
               var imagePromise = imagePromises[index];
               imagePromise.then((imageResponse) => {
-                var basePath = this.parent.basePath;
-                var organizationId = this.parent.organizationId;
                 if (imageResponse.length) {
-                  result.imageSrc = util.format('%s/organizations/%s/banners/%s/images/%s/data', basePath, organizationId, result.id, imageResponse[0].id);
+                  result.imageId = imageResponse[0].id;
                 }
                 callback();
               }).catch((imageError) => {
