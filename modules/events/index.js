@@ -12,6 +12,12 @@
       this.parent = parent;
       this.eventsApi = new parent.api.EventsApi();
     }
+    
+    streamImageData(eventId, imageId, query, headers) {
+      var url = util.format('%s/organizations/%s/events/%s/images/%s/data', this.parent.basePath, this.parent.organizationId, eventId, imageId);
+      this.parent.addPromise(this.parent.promiseStream(url, query, headers));
+      return this.parent;
+    }
 
     latest(maxResults, orderBy, orderDir) {
       this.parent.addPromise(new Promise((resolve, reject) => {
@@ -33,11 +39,7 @@
             async.eachOf(results, (result, index, callback) => {
               var imagePromise = imagePromises[index];
               imagePromise.then((imageResponse) => {
-                var basePath = this.parent.basePath;
-                var organizationId = this.parent.organizationId;
-                var eventId = result.id;
-                var imageSrc = imageResponse.length ? util.format('%s/organizations/%s/events/%s/images/%s/data', basePath, organizationId, eventId, imageResponse[0].id) : null;
-                result.imageSrc = imageSrc;
+                result.imageId = imageResponse[0].id;
                 callback();
               }).catch((imageError) => {
                 console.error('Error loading event image', imageError);
