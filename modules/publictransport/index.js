@@ -1,6 +1,5 @@
 /*jshint esversion: 6 */
 /* global Promise */
-
 (function () {
   'use strict';
 

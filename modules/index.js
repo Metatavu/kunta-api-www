@@ -63,10 +63,27 @@
         .catch(error);
     }
     
-    promiseStream (url) {
+    promiseStream (url, query, headers) {
       return new Promise((resolve) => {
-        var stream = request(url);
-        resolve(stream);
+        var forwardHeaderNames = ['if-none-match', 'cache-control'];
+        var requestHeaders = null;
+        
+        if (headers) {
+          requestHeaders = {};
+          _.each(headers, (value, key) => {
+            if (forwardHeaderNames.indexOf(key.toLowerCase()) > -1) {
+              requestHeaders[key] = value;
+            }
+          });
+        }
+        
+        var options = {
+          url: url,
+          headers: requestHeaders,
+          qs: query
+        };
+        
+        resolve(request.get(options));
       });
     }
 
