@@ -5,7 +5,6 @@
   const util = require('util');
   const _ = require('lodash');
   const async = require('async');
-  const request = require('request');
 
   class BannersApi {
 

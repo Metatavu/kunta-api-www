@@ -13,9 +13,15 @@
       this.parent = parent;
       this.tilesApi = new parent.api.TilesApi();
     }
+    
+    streamImageData(tileId, imageId, query, headers) {
+      var url = util.format('%s/organizations/%s/tiles/%s/images/%s/data', this.parent.basePath, this.parent.organizationId, tileId, imageId);
+      this.parent.addPromise(this.parent.promiseStream(url, query, headers));
+      return this.parent;
+    }
 
     list() {
-      this.parent.addPromise(new Promise((resolve, reject) => {
+      this.parent.addPromise(new Promise((resolve) => {
         this.tilesApi.listOrganizationTiles(this.parent.organizationId)
           .then(tiles => {
             var imagePromises = tiles.map(tile => {
@@ -30,8 +36,7 @@
               var imagePromise = imagePromises[index];
               imagePromise.then((imageResponse) => {
                 if (imageResponse.length) {
-                  result.imageSrc = this.getImageUrl(result.id,
-                    imageResponse[0].id);
+                  result.imageId = imageResponse[0].id;
                 }
                 callback();
               }).catch((imageError) => {
@@ -50,14 +55,6 @@
       }));
 
       return this.parent;
-    }
-
-    getImageUrl(tileId, imageId) {
-      var basePath = this.parent.basePath;
-      var organizationId = this.parent.organizationId;
-
-      return util.format('%s/organizations/%s/tiles/%s/images/%s/data',
-        basePath, organizationId, tileId, imageId);
     }
 
   }
