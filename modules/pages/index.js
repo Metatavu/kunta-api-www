@@ -14,33 +14,17 @@
       this.pagesApi = new parent.api.PagesApi();
     }
     
-    streamPageImageByType(pageId, type, defaultImage) {
+    streamImageData(pageId, imageId, query, headers) {
+      var url = util.format('%s/organizations/%s/pages/%s/images/%s/data', this.parent.basePath, this.parent.organizationId, pageId, imageId);
+      this.parent.addPromise(this.parent.promiseStream(url, query, headers));
+      return this.parent;
+    }
+    
+    listImages(pageId) {
       this.parent.addPromise(new Promise((resolve) => {
-        var options = {
-          type: type 
-        };
-        
-        this.pagesApi.listOrganizationPageImages(this.parent.organizationId, pageId, options)
-          .then(imageResponse => {
-            var basePath = this.parent.basePath;
-            var organizationId = this.parent.organizationId;
-            if (imageResponse.length) {
-              var url = util.format('%s/organizations/%s/pages/%s/images/%s/data', basePath, organizationId, pageId, imageResponse[0].id);
-              resolve({
-                attachment: imageResponse[0], 
-                stream: request(url)
-              });
-            } else {
-              resolve({
-                stream: fs.createReadStream(defaultImage)
-              });
-            }
-          })
-          .catch(imagesErr => {
-            console.error(imagesErr);
-            resolve({
-              stream: fs.createReadStream(defaultImage)
-            });
+        this.pagesApi.listOrganizationPageImages(this.parent.organizationId, pageId)
+          .then(images => {
+            resolve(images);
           });
       }));
       
