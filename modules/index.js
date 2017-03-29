@@ -7,13 +7,13 @@
   const Promise = require('bluebird');
   const _ = require('lodash');
   const locale = require('locale');
-  const request = require('request');
+  const request = require('request');  
   
   process.on('unhandledRejection', function(error, promise) {
     console.error("UNHANDLED REJECTION", error.stack);
   });  
 
-  const KuntaApi = require(__dirname + '/../kunta-api.js');
+  const KuntaApi = require(__dirname + '/kunta-api.js');
   const EventsModule = require(__dirname + '/events');
   const NewsModule = require(__dirname + '/news');
   const BannersModule = require(__dirname + '/banners');
@@ -51,7 +51,7 @@
 
       this._promises = [];
     }
-    
+
     addPromise (promise) {
       this._promises.push(promise);
       return promise;
