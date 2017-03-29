@@ -20,7 +20,7 @@
     "express": "^4.14.1",
     "fb": "^1.1.1",
     "instagram-api": "^1.0.3",
-    "kunta-api-client": "0.0.66",
+    "kunta-api-client": "0.0.67",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
