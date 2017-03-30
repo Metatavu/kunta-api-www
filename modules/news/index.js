@@ -13,6 +13,12 @@
       this.newsApi = new parent.api.NewsApi();
     }
     
+    streamImageData(newsArticleId, imageId, query, headers) {
+      var url = util.format('%s/organizations/%s/news/%s/images/%s/data', this.parent.basePath, this.parent.organizationId, newsArticleId, imageId);
+      this.parent.addPromise(this.parent.promiseStream(url, query, headers));
+      return this.parent;
+    }
+    
     listByTag(tag) {
       this.parent.addPromise(new Promise((resolve) => {
         this.newsApi.listOrganizationNews(this.parent.organizationId, {
@@ -29,19 +35,10 @@
           async.eachOf(results, (result, index, callback) => {
             var imagePromise = imagePromises[index];
             imagePromise.then((imageResponse) => {
-              var basePath = this.parent.basePath;
-              var organizationId = this.parent.organizationId;
-              var newsArticleId = result.id;
-              var imageSrc = null;
               if (imageResponse.length) {
-                imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data',
-                  basePath,
-                  organizationId,
-                  newsArticleId,
-                  imageResponse[0].id);
+                result.imageId = imageResponse[0].id;
               }
-
-              result.imageSrc = imageSrc;
+              
               callback();
             }).catch((imageError) => {
               console.error('Error loading news image', imageError);
@@ -70,16 +67,10 @@
             this.parent.organizationId,
             newsArticle.id
           ).then(newsImages => {
-            var imageSrc = null;
             if (newsImages.length) {
-              var newsImage = newsImages[0];
-              imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data',
-                this.parent.basePath,
-                this.parent.organizationId,
-                newsArticle.id,
-                newsImage.id);
+              newsArticle.imageId = newsImages[0].id;
             }
-            newsArticle.imageSrc = imageSrc;
+            
             resolve(newsArticle);
           }).catch(imagesErr => {
             console.error('Error loading news image', imagesErr);
@@ -111,19 +102,10 @@
           async.eachOf(results, (result, index, callback) => {
             var imagePromise = imagePromises[index];
             imagePromise.then((imageResponse) => {
-              var basePath = this.parent.basePath;
-              var organizationId = this.parent.organizationId;
-              var newsArticleId = result.id;
-              var imageSrc = null;
               if (imageResponse.length) {
-                imageSrc = util.format('%s/organizations/%s/news/%s/images/%s/data',
-                  basePath,
-                  organizationId,
-                  newsArticleId,
-                  imageResponse[0].id);
+                result.imageId = imageResponse[0].id;
               }
-
-              result.imageSrc = imageSrc;
+              
               callback();
             }).catch((imageError) => {
               console.error('Error loading news image', imageError);
