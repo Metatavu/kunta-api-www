@@ -26,6 +26,10 @@
       clientInstance.basePath = opts.basePath;
     }
     
+    if (opts.defaultHeaders) {
+      clientInstance.defaultHeaders = opts.defaultHeaders;
+    }
+    
     clientInstance.failsafeCache = failsafeCache;
     
     clientInstance.beforeRequest = (request, superagent) => {
