@@ -34,7 +34,8 @@
       this.config = config;
       this.organizationId = this.config.get('defaults:organizationId');
       this.basePath = this.config.get('api:basePath');
-      this.api = new KuntaApi({ basePath: this.basePath });
+      this.defaultHeaders = this.config.get('defaults:headers');
+      this.api = new KuntaApi({ basePath: this.basePath, defaultHeaders: this.defaultHeaders });
       this.events = new EventsModule(this);
       this.news = new NewsModule(this);
       this.banners = new BannersModule(this);
@@ -74,6 +75,15 @@
             if (forwardHeaderNames.indexOf(key.toLowerCase()) > -1) {
               requestHeaders[key] = value;
             }
+          });
+        }
+        
+        if (this.defaultHeaders) {
+          if (!headers) {
+            requestHeaders = {};
+          }
+          _.each(this.defaultHeaders, (value, key) => {
+            requestHeaders[key] = value;
           });
         }
         
