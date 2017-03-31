@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.0.30",
+  "version": "0.0.33",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
@@ -16,17 +16,20 @@
   "dependencies": {
     "async": "^2.1.4",
     "bluebird": "^3.4.7",
+    "cache-service-redis": "1.2.2",
     "express": "^4.14.1",
     "fb": "^1.1.1",
     "instagram-api": "^1.0.3",
-    "kunta-api-client": "0.0.57",
+    "kunta-api-client": "0.0.70",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
-    "moment": "2.17.1",
+    "moment": "2.18.1",
     "nconf": "^0.8.4",
     "pug": "^2.0.0-beta9",
     "request": "^2.79.0",
+    "superagent-cache-plugin": "1.0.2",
+    "superagent-logger": "1.1.0",
     "twitter": "^1.7.0"
   },
   "devDependencies": {

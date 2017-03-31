@@ -7,13 +7,13 @@
   const Promise = require('bluebird');
   const _ = require('lodash');
   const locale = require('locale');
-  const request = require('request');
+  const request = require('request');  
   
   process.on('unhandledRejection', function(error, promise) {
     console.error("UNHANDLED REJECTION", error.stack);
   });  
 
-  const KuntaApi = require(__dirname + '/../kunta-api.js');
+  const KuntaApi = require(__dirname + '/kunta-api.js');
   const EventsModule = require(__dirname + '/events');
   const NewsModule = require(__dirname + '/news');
   const BannersModule = require(__dirname + '/banners');
@@ -30,11 +30,12 @@
   
   class KuntaApiModules {
     
-    constructor(config) {
+    constructor(config, organizationId) {
       this.config = config;
-      this.organizationId = this.config.get('defaults:organizationId');
+      this.organizationId = organizationId || this.config.get('defaults:organizationId');
       this.basePath = this.config.get('api:basePath');
-      this.api = new KuntaApi({ basePath: this.basePath });
+      this.defaultHeaders = this.config.get('defaults:headers');
+      this.api = new KuntaApi({ basePath: this.basePath, defaultHeaders: this.defaultHeaders });
       this.events = new EventsModule(this);
       this.news = new NewsModule(this);
       this.banners = new BannersModule(this);
@@ -51,7 +52,7 @@
 
       this._promises = [];
     }
-    
+
     addPromise (promise) {
       this._promises.push(promise);
       return promise;
@@ -74,6 +75,15 @@
             if (forwardHeaderNames.indexOf(key.toLowerCase()) > -1) {
               requestHeaders[key] = value;
             }
+          });
+        }
+        
+        if (this.defaultHeaders) {
+          if (!headers) {
+            requestHeaders = {};
+          }
+          _.each(this.defaultHeaders, (value, key) => {
+            requestHeaders[key] = value;
           });
         }
         
