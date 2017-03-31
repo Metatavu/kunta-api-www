@@ -30,9 +30,9 @@
   
   class KuntaApiModules {
     
-    constructor(config) {
+    constructor(config, organizationId) {
       this.config = config;
-      this.organizationId = this.config.get('defaults:organizationId');
+      this.organizationId = organizationId || this.config.get('defaults:organizationId');
       this.basePath = this.config.get('api:basePath');
       this.defaultHeaders = this.config.get('defaults:headers');
       this.api = new KuntaApi({ basePath: this.basePath, defaultHeaders: this.defaultHeaders });
