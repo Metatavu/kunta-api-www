@@ -24,9 +24,10 @@
       return this.parent;
     }
     
-    search(search) {
+    search(search, maxResults) {
       var options = {
-        search: search
+        search: search,
+        maxResults: maxResults
       };
       
       this.parent.addPromise(new Promise((resolve) => {

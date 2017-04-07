@@ -264,9 +264,10 @@
       return this.parent;
     }
     
-    search(search, preferLanguages) {
+    search(search, preferLanguages, maxResults) {
       var options = {
-        search: search
+        search: search,
+        maxResults: maxResults
       };
       
       this.parent.addPromise(new Promise((resolve) => {
