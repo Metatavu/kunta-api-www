@@ -24,10 +24,13 @@
       return this.parent;
     }
     
-    search(search, maxResults) {
-      var options = {
+    search(search, firstResult, maxResults) {
+      const options = {
         search: search,
-        maxResults: maxResults
+        firstResult: firstResult,
+        maxResults: maxResults,
+        sortBy: 'SCORE',
+        sortDir: 'DESC'
       };
       
       this.parent.addPromise(new Promise((resolve) => {

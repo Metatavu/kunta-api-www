@@ -6,6 +6,7 @@
   const _ = require('lodash');
   const request = require('request');
   const fs = require('fs');
+  const Promise = require('bluebird');
   
   class PagesModule {
     
@@ -57,7 +58,7 @@
       };
       
       this.parent.addPromise(new Promise((resolve, reject) => {
-        if (rootId == leafId) {
+        if (rootId === leafId) {
           resolve([]);
           return;
         } 
@@ -116,7 +117,7 @@
             if (!page) {
               reject(util.format("Could not find page with id %s", leafId));
             } else {
-              if (page.parentId && page.parentId != rootId) {
+              if (page.parentId && page.parentId !== rootId) {
                 this.resolvePageTree(rootId, page.parentId)
                   .then(ancestors => {
                     resolve(ancestors.concat(page));
@@ -264,10 +265,12 @@
       return this.parent;
     }
     
-    search(search, preferLanguages, maxResults) {
+    search(search, preferLanguages, firstResult, maxResults) {
       var options = {
         search: search,
-        maxResults: maxResults
+        firstResult: firstResult,
+        maxResults: maxResults,
+        sortBy: 'SCORE'
       };
       
       this.parent.addPromise(new Promise((resolve) => {

@@ -91,16 +91,16 @@
           firstResult: firstResult,
           maxResults: maxResults
         }).then(news => {
-          var imagePromises = news.map(newsArticle => {
+          const imagePromises = news.map(newsArticle => {
             return this.newsApi.listOrganizationNewsArticleImages(
               this.parent.organizationId,
               newsArticle.id);
           });
 
-          var results = _.cloneDeep(news);
+          const results = _.cloneDeep(news);
 
           async.eachOf(results, (result, index, callback) => {
-            var imagePromise = imagePromises[index];
+            const imagePromise = imagePromises[index];
             imagePromise.then((imageResponse) => {
               if (imageResponse.length) {
                 result.imageId = imageResponse[0].id;
@@ -119,6 +119,52 @@
           console.error('Error listing news', listErr);
           resolve([]);
         });
+      }));
+
+      return this.parent;
+    }
+    
+    search(search, firstResult, maxResults) {
+      var options = {
+        search: search,
+        firstResult: firstResult,
+        maxResults: maxResults,
+        sortBy: 'SCORE',
+        sortDir: 'DESC'
+      };
+      
+      this.parent.addPromise(new Promise((resolve) => {
+        this.newsApi.listOrganizationNews(this.parent.organizationId, options)
+          .then(news => {
+            const imagePromises = news.map(newsArticle => {
+              return this.newsApi.listOrganizationNewsArticleImages(
+                this.parent.organizationId,
+                newsArticle.id);
+            });
+
+            const results = _.cloneDeep(news);
+
+            async.eachOf(results, (result, index, callback) => {
+              const imagePromise = imagePromises[index];
+              imagePromise.then((imageResponse) => {
+                if (imageResponse.length) {
+                  result.imageId = imageResponse[0].id;
+                }
+
+                callback();
+              }).catch((imageError) => {
+                console.error('Error loading news image', imageError);
+                callback();
+              });
+
+            }, () => {
+              resolve(results);
+            });
+          })
+          .catch(listErr => {
+            console.error(listErr);
+            resolve([]);
+          });
       }));
 
       return this.parent;
