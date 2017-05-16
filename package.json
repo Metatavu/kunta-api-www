@@ -20,7 +20,7 @@
     "express": "^4.14.1",
     "fb": "^2.0.0",
     "instagram-api": "^1.0.3",
-    "kunta-api-client": "0.0.96",
+    "kunta-api-client": "0.0.101",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
@@ -28,7 +28,7 @@
     "nconf": "^0.8.4",
     "pug": "^2.0.0-beta9",
     "request": "^2.79.0",
-    "superagent-cache-plugin": "1.0.2",
+    "superagent-cache-plugin": "2.0.0",
     "superagent-logger": "1.1.0",
     "twitter": "^1.7.0"
   },
