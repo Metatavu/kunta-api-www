@@ -270,7 +270,8 @@
         search: search,
         firstResult: firstResult,
         maxResults: maxResults,
-        sortBy: 'SCORE'
+        sortBy: 'SCORE',
+        sortDir: 'ASC'
       };
       
       this.parent.addPromise(new Promise((resolve) => {
