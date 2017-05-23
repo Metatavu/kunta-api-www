@@ -15,14 +15,6 @@
   const http = require('http').Server(app);
   app.set('view engine', 'pug');
   
-  config.file({ file: argv.config || __dirname + '/../../test/config/config.json' });
-  const implementation = require(config.get('implementation'))();
-  
-  app.set('views',implementation.views);
-  app.use(express.static(implementation.static));
-  app.use(express.static(path.join(__dirname, 'public')));
-  implementation.routes(app, config, Modules);
-  
   module.exports = app;
  
 }).call(this);
