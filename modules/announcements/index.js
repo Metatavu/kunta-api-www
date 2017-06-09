@@ -27,10 +27,15 @@
     }
 
     list(maxResults, sortBy, sortDir) {
+      return this.listFrom(0, maxResults, sortBy, sortDir);
+    }
+    
+    listFrom(firstResult, maxResults, sortBy, sortDir) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         this.announcementsApi.listOrganizationAnnouncements(this.parent.organizationId, {
           sortBy: sortBy,
           sortDir: sortDir,
+          firstResult: firstResult,
           maxResults: maxResults
         })
           .then(announcements => {
