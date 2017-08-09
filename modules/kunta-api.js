@@ -33,7 +33,10 @@
     clientInstance.failsafeCache = failsafeCache;
     
     clientInstance.beforeRequest = (request, superagent) => {
-      request.use(superAgentLogger);
+      if (config.get('api:log-requests')) {
+        request.use(superAgentLogger);
+      }
+      
       request.use(superagentCache);
     };
     
