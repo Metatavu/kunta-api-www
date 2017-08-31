@@ -16,6 +16,7 @@
       this.initClient();
       this.filterApi = new LinkedEventsClient.FilterApi();
       this.eventApi = new LinkedEventsClient.EventApi();
+      this.imageApi = new LinkedEventsClient.ImageApi();
     }
     
     initClient () {
@@ -34,15 +35,46 @@
     }
     
     createEvent(eventData) {
-      console.log(eventData);
-      const event = LinkedEventsClient.Event.constructFromObject(eventData);
-      console.log(event);
+      const linkedEventsURL = config.get('linkedevents:api-url');
       
-      const options = {
-        eventObject: event
+      eventData.keywords = _.map(eventData.keywords||[], (keyword) => {
+        return {
+          "@id": `${linkedEventsURL}/keyword/${keyword}/`
+        };
+      });
+      
+      eventData.location = {
+        "@id": `${linkedEventsURL}/place/${eventData.location}/` 
       };
       
-      this.parent.addPromise(this.eventApi.eventCreate(options));
+      const imageUrlCreates = _.map(eventData['image-urls'], (imageUrl) => {
+        const imageObject = LinkedEventsClient.ImageUrl.constructFromObject({
+          url: imageUrl
+        });
+        
+        return this.imageApi.imageCreate({
+          imageObject: imageObject
+        });
+      });
+      
+      eventData['image-urls'] = null;
+      
+      this.parent.addPromise(Promise.all(imageUrlCreates)
+        .then((images) => {
+          const event = LinkedEventsClient.Event.constructFromObject(eventData);
+      
+          event.images = _.map(images, (image) => {
+            return {
+              "@id": `${linkedEventsURL}/image/${image.id}/`
+            };
+          });
+          
+          return this.eventApi.eventCreate({
+            eventObject: event
+          });
+        })
+      );
+      
       return this.parent;
     }
     
