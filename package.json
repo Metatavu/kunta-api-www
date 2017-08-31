@@ -16,11 +16,13 @@
   "dependencies": {
     "async": "^2.1.4",
     "bluebird": "^3.4.7",
+    "body-parser": "^1.17.2",
     "cache-service-redis": "1.2.2",
     "express": "^4.14.1",
     "fb": "^2.0.0",
     "instagram-api": "^1.0.3",
     "kunta-api-client": "0.0.101",
+    "linkedevents-client": "0.0.1",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
