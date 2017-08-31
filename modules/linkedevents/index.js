@@ -93,7 +93,7 @@
     
     searchKeywords(text, page, pageSize) {
       const options = {
-        showAllPlaces: true,
+        showAllKeywords: true,
         text: text,
         dataSource: this.dataSource,
         page: page,
