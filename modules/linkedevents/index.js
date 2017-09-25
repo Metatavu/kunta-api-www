@@ -8,6 +8,7 @@
   const Promise = require('bluebird');
   const LinkedEventsClient = require('linkedevents-client');
   const config = require('nconf');
+  const uuidv4 = require('uuid/v4');
   
   class LinkedEventsApi {
 
@@ -74,6 +75,23 @@
           });
         })
       );
+      
+      return this.parent;
+    }
+    
+    createPlace(placeData) {
+      const linkedEventsURL = config.get('linkedevents:api-url');
+      
+      const place = LinkedEventsClient.Place.constructFromObject(Object.assign({
+        "data_source": this.dataSource,
+        "publisher": this.publisher,
+        "origin_id": uuidv4(),
+        "deleted": false
+      }, placeData));
+      
+      this.parent.addPromise(this.filterApi.placeCreate({
+        placeObject: place
+      }));
       
       return this.parent;
     }
