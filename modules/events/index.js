@@ -44,15 +44,32 @@
       return this.parent;
     }
     
-    list(firstResult, maxResults, orderBy, orderDir) {
+    /**
+     * Lists events from Kunta API
+     * 
+     * @param {Object} options request options
+     * @return {Object} parent object
+     */
+    list(options) {
+      if (arguments.length > 1) {
+        // Support for old deprecated version of the method
+        return this.list({ 
+          firstResult: arguments[0],
+          maxResults: arguments[1],
+          orderBy: arguments[2],
+          orderDir: arguments[3]
+        });
+      }
+      
+      const opts = Object.assign({
+        startAfter: (new Date()).toISOString(),
+        firstResult: 0,
+        orderBy: 'START_DATE',
+        orderDir: 'ASCENDING'
+      }, options);
+      
       this.parent.addPromise(new Promise((resolve, reject) => {
-        this.eventsApi.listOrganizationEvents(this.parent.organizationId, {
-          startAfter: (new Date()).toISOString(),
-          orderBy: orderBy ? orderBy : 'START_DATE',
-          orderDir: orderDir ? orderDir : 'ASCENDING',
-          firstResult: firstResult,
-          maxResults: maxResults
-        })
+        this.eventsApi.listOrganizationEvents(this.parent.organizationId, opts)
           .then(events => {
             var imagePromises = events.map(event => {
               return this.eventsApi.listOrganizationEventImages(

@@ -1,6 +1,6 @@
 /node_modules/
 /.project
-/config.json
+/config*.json
 /.sass-cache/
 /.tern-project
 /.settings/
