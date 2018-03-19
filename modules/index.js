@@ -31,6 +31,7 @@
   const EmergenciesModule = require(__dirname + '/emergencies');
   const ContactsModule = require(__dirname + '/contacts');
   const LinkedEventsModule = require(__dirname + '/linkedevents');
+  const MetaformModule = require(__dirname + '/metaform');
   
   class KuntaApiModules {
     
@@ -56,7 +57,8 @@
       this.incidents = new IncidentsModule(this);
       this.emergencies = new EmergenciesModule(this);
       this.contacts = new ContactsModule(this);
-      this.linkedevents = new LinkedEventsModule(this);
+      this.linkedevents = new LinkedEventsModule(this);      
+      this.metaform = new MetaformModule(this);
       
       this._promises = [];
     }
