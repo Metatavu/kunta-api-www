@@ -20,7 +20,7 @@
             'pass': config.get('metaform:password'),
             'sendImmediately': true
           }
-        },function (error, response, body) {
+        }, (error, response, body) => {
           if (error) {
             reject(error);
           } else {
