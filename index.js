@@ -18,6 +18,7 @@
     app.set('view engine', 'pug');
     const implementation = require(config.get('implementation'))();
     app.set('views',implementation.views);
+    app.set('trust proxy', 'loopback');
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
       extended : true
