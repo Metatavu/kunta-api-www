@@ -53,7 +53,8 @@
     readMenuTree(rootId, leafId, preferLanguages) {
       var opts = function (parentId) {
         return {
-          parentId: parentId ? parentId : 'ROOT'
+          parentId: parentId ? parentId : 'ROOT',
+          sortBy: 'MENU'
         };
       };
       
@@ -221,7 +222,8 @@
     
     listMetaByParentId(parentId, preferLanguages) {
       var options = {
-        parentId: parentId ? parentId : 'ROOT'
+        parentId: parentId ? parentId : 'ROOT',
+        sortBy: 'MENU'
       };
       
       this.parent.addPromise(new Promise((resolve, reject) => {
