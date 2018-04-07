@@ -85,11 +85,12 @@
       return this.parent;
     }
 
-    latest(firstResult, maxResults) {
+    latest(firstResult, maxResults, sortBy) {
       this.parent.addPromise(new Promise((resolve, reject) => {
         this.newsApi.listOrganizationNews(this.parent.organizationId, {
           firstResult: firstResult,
-          maxResults: maxResults
+          maxResults: maxResults,
+          sortBy: sortBy || 'ORDER_NUMBER_PUBLISHED'
         }).then(news => {
           const imagePromises = news.map(newsArticle => {
             return this.newsApi.listOrganizationNewsArticleImages(
