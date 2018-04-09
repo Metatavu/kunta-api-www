@@ -122,6 +122,16 @@
       return this.parent;
     }
 
+    /**
+     * Finds single place from the LinkedEvents
+     * 
+     * @param {String} id place id 
+     */
+    findPlace(id) {
+      this.parent.addPromise(this.filterApi.placeRetrieve(id));
+      return this.parent;
+    }
+
   }
 
   module.exports = function (kuntaApi) {
