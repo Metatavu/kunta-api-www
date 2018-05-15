@@ -22,7 +22,7 @@
     listNews(options) {
       this.parent.addPromise(new Promise((resolve) => {
         this.newsApi.listOrganizationNews(this.parent.organizationId, options).then(news => {
-          var imagePromises = news.map(newsArticle => {
+          const imagePromises = news.map(newsArticle => {
             return this.newsApi.listOrganizationNewsArticleImages(
               this.parent.organizationId,
               newsArticle.id);
