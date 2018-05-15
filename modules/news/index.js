@@ -28,10 +28,10 @@
               newsArticle.id);
           });
 
-          var results = _.cloneDeep(news);
+          const results = _.cloneDeep(news);
 
           async.eachOf(results, (result, index, callback) => {
-            var imagePromise = imagePromises[index];
+            const imagePromise = imagePromises[index];
             imagePromise.then((imageResponse) => {
               if (imageResponse.length) {
                 result.imageId = imageResponse[0].id;
