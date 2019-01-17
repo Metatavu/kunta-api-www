@@ -11,6 +11,7 @@
   const Modules = require('./modules'); 
   const pug = require('pug');
   const bodyParser = require('body-parser');
+  const cookieParser = require("cookie-parser");
   
   const app = express();
   
@@ -19,6 +20,7 @@
     const implementation = require(config.get('implementation'))();
     app.set('views',implementation.views);
     app.set('trust proxy', 'loopback');
+    app.use(cookieParser());
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({
       extended : true
