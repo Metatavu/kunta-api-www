@@ -32,6 +32,7 @@
   const ContactsModule = require(__dirname + '/contacts');
   const LinkedEventsModule = require(__dirname + '/linkedevents');
   const MetaformModule = require(__dirname + '/metaform');
+  const EnvironmentalWarnings = require(__dirname + '/environmentalWarnings');
   
   class KuntaApiModules {
     
@@ -59,6 +60,7 @@
       this.contacts = new ContactsModule(this);
       this.linkedevents = new LinkedEventsModule(this);      
       this.metaform = new MetaformModule(this);
+      this.environmentalWarnings = new EnvironmentalWarnings(this);
       
       this._promises = [];
     }
