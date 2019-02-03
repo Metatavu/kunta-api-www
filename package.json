@@ -22,7 +22,7 @@
     "express": "^4.14.1",
     "fb": "^2.0.0",
     "instagram-api": "^1.0.3",
-    "kunta-api-client": "0.0.105",
+    "kunta-api-client": "0.0.139",
     "linkedevents-client": "0.0.6",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
