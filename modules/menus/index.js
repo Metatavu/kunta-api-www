@@ -34,10 +34,10 @@
                       return menu.slug;
                     }));
                   })
-                  .catch(itemErr => reject(itemErr))
+                  .catch(itemErr => resolve([]))
               })
               .catch(itemsErr => {
-                reject(itemsErr);
+                resolve([]);
               });
           })
           .catch(listErr => {
