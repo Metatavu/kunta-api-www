@@ -34,10 +34,10 @@
                       return menu.slug;
                     }));
                   })
-                  .catch(itemErr => reject(itemErr))
+                  .catch(itemErr => resolve([]))
               })
               .catch(itemsErr => {
-                reject(itemsErr);
+                resolve([]);
               });
           })
           .catch(listErr => {
@@ -77,7 +77,12 @@
                 url: url
               }));
             })
-            .catch(err => reject(err));
+            .catch((err) => {
+              console.error(`Error resolving page tree for menu item with page id: ${item.pageId}`);
+              resolve(_.assignIn(item, {
+                url: '#'
+              }));
+            });
         } else {
           resolve(_.assignIn(item, {
             url: '#'

@@ -19,6 +19,42 @@
       return this.parent;
     }
     
+    listNews(options) {
+      this.parent.addPromise(new Promise((resolve) => {
+        this.newsApi.listOrganizationNews(this.parent.organizationId, options).then(news => {
+          const imagePromises = news.map(newsArticle => {
+            return this.newsApi.listOrganizationNewsArticleImages(
+              this.parent.organizationId,
+              newsArticle.id);
+          });
+
+          const results = _.cloneDeep(news);
+
+          async.eachOf(results, (result, index, callback) => {
+            const imagePromise = imagePromises[index];
+            imagePromise.then((imageResponse) => {
+              if (imageResponse.length) {
+                result.imageId = imageResponse[0].id;
+              }
+              
+              callback();
+            }).catch((imageError) => {
+              console.error('Error loading news image', imageError);
+              callback();
+            });
+
+          }, () => {
+            resolve(results);
+          });
+        }).catch(listErr => {
+          console.error('Failed to list news article', listErr);
+          resolve([]);
+        });
+      }));
+
+      return this.parent;
+    }
+    
     listByTag(tag) {
       this.parent.addPromise(new Promise((resolve) => {
         this.newsApi.listOrganizationNews(this.parent.organizationId, {

@@ -1,6 +1,6 @@
 {
   "name": "kunta-api-www",
-  "version": "0.2.12",
+  "version": "0.2.19",
   "description": "www visualization layer for kunta-api data",
   "main": "app.js",
   "scripts": {
@@ -18,10 +18,11 @@
     "bluebird": "^3.4.7",
     "body-parser": "^1.17.2",
     "cache-service-redis": "1.2.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.14.1",
     "fb": "^2.0.0",
     "instagram-api": "^1.0.3",
-    "kunta-api-client": "0.0.105",
+    "kunta-api-client": "0.0.140",
     "linkedevents-client": "0.0.6",
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
