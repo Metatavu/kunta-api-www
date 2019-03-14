@@ -267,28 +267,36 @@
       return this.parent;
     }
     
-    search(search, preferLanguages, firstResult, maxResults) {
-      var options = {
-        search: search,
-        firstResult: firstResult,
-        maxResults: maxResults,
-        sortBy: 'SCORE',
-        sortDir: 'ASC'
-      };
-      
+    /**
+     * Lists events from Kunta API
+     * 
+     * @param {Object} options request options
+     * @return {Object} parent object
+     */
+    search(options, preferLanguages) {
+      if (arguments.length > 2) {
+        // Support for old deprecated version of the method
+        return this.search({
+          search: arguments[0],
+          firstResult: arguments[2],
+          maxResults: arguments[3],
+          sortBy: 'SCORE',
+          sortDir: 'ASC'
+        }, arguments[1]);
+      }
+
       this.parent.addPromise(new Promise((resolve) => {
         this.pagesApi.listOrganizationPages(this.parent.organizationId, options)
-          .then(pages => {
-            _.each(pages, page => {
-              page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
-            });
-            
-            resolve(pages);
-          })
-          .catch(listErr => {
-            console.error(listErr);
-            resolve([]);
+        .then(pages => {
+          _.each(pages, page => {
+            page.title = this.parent.selectBestLocale(page.titles, preferLanguages);
           });
+          resolve(pages);
+        })
+        .catch(listErr => {
+          console.error(listErr);
+          resolve([]);
+        });
       }));
 
       return this.parent;
