@@ -1,3 +1,5 @@
+const KuntaApiClient = require('kunta-api-client');
+
 /*jshint esversion: 6 */
 (function () {
   'use strict';
@@ -6,7 +8,12 @@
 
     constructor(parent) {
       this.parent = parent;
-      this.jobsApi = new parent.api.JobsApi();
+
+      const clientInstance = new KuntaApiClient.ApiClient();
+      clientInstance.basePath = this.parent.config.get('api:jobsBasePath') || this.parent.config.get('api:basePath');
+      clientInstance.defaultHeaders = this.parent.defaultHeaders;
+
+      this.jobsApi = new parent.api.JobsApi(clientInstance);
     }
     
     findById(jobId) { 
@@ -22,13 +29,13 @@
           sortDir: sortDir,
           maxResults: maxResults
         })
-          .then(jobs => {
-            resolve(jobs);
-          })
-          .catch(listErr => {
-            console.error('Error listing jobs', listErr);
-            resolve([]);
-          });
+        .then(jobs => {
+          resolve(jobs);
+        })
+        .catch(listErr => {
+          console.error('Error listing jobs', listErr);
+          resolve([]);
+        });
       }));
 
       return this.parent;
