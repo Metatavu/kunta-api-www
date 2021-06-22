@@ -29,7 +29,7 @@
     "minimist": "^1.2.0",
     "moment": "2.18.1",
     "nconf": "^0.8.4",
-    "pug": "^2.0.0-beta9",
+    "pug": "^3.0.1",
     "request": "^2.79.0",
     "superagent-cache-plugin": "2.0.0",
     "superagent-logger": "1.1.0",
