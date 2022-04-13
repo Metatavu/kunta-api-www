@@ -14,7 +14,7 @@
   "author": "",
   "license": "AGPL-3.0",
   "dependencies": {
-    "async": "^2.1.4",
+    "async": "^3.2.2",
     "bluebird": "^3.4.7",
     "body-parser": "^1.17.2",
     "cache-service-redis": "1.2.3",
