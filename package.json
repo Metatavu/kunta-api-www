@@ -28,7 +28,7 @@
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
     "moment": "2.18.1",
-    "nconf": "^0.8.4",
+    "nconf": "^0.11.4",
     "pug": "^2.0.0-beta9",
     "request": "^2.79.0",
     "superagent-cache-plugin": "2.0.0",
