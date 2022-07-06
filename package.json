@@ -27,7 +27,7 @@
     "locale": "^0.1.0",
     "lodash": "^4.17.4",
     "minimist": "^1.2.0",
-    "moment": "2.18.1",
+    "moment": "2.29.4",
     "nconf": "^0.8.4",
     "pug": "^2.0.0-beta9",
     "request": "^2.79.0",
